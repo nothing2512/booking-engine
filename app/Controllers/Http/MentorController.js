@@ -28,7 +28,7 @@ const Category = use('App/Models/Category');
 const AggregatorMentor = use('App/Models/AggregatorMentor');
 
 /** @type {typeof import('../../Models/MentorSpecialization')} */
-const Specialization = use('App/Models/ReaderSpecialization');
+const Specialization = use('App/Models/MentorSpecialization');
 
 /** @type {typeof import('../../Helpers/Engine')} */
 const Engine = use('App/Helpers/Engine');

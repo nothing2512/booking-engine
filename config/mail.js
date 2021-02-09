@@ -27,8 +27,8 @@ module.exports = {
         pool: true,
         service: 'gmail',
         auth: {
-            user: 'ezy.bacatarot@gmail.com',
-            pass: 'vklwmgujynlnshfy'
+            user: Env.get("MAIL_USER"),
+            pass: Env.get("MAIL_PASS")
         },
         maxConnections: 5,
         maxMessages: 100,

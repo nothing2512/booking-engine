@@ -91,7 +91,7 @@ class BookController {
             .orderBy('index', 'asc')
             .fetch();
 
-        book.cateogry = await Category.find(book.category_id);
+        book.category = await Category.find(book.category_id);
 
         return response.success(book)
     }
@@ -113,14 +113,14 @@ class BookController {
 
         payloads.image = await Uploader.book(request.file("image"));
 
-        const tarot = await Book.create(payloads);
-        tarot.category = category;
+        const book = await Book.create(payloads);
+        book.category = category;
 
-        return response.success(tarot)
+        return response.success(book)
     }
 
     /**
-     * update tarot
+     * update book
      *
      * @method update
      * @async
@@ -142,17 +142,17 @@ class BookController {
 
         if (!isNaN(index)) {
             if (index > book.index) {
-                const tarots = await Book.query()
+                const books = await Book.query()
                     .where('index', '<=', index)
                     .where('index', '>', book.index)
                     .fetch();
-                await this.queue(tarots.toJSON(), -1)
+                await this.queue(books.toJSON(), -1)
             } else if (index < book.index) {
-                const tarots = await Book.query()
+                const books = await Book.query()
                     .where('index', '>=', index)
                     .where('index', '<', book.index)
                     .fetch();
-                await this.queue(tarots.toJSON(), 1)
+                await this.queue(books.toJSON(), 1)
             }
         }
 
@@ -168,7 +168,7 @@ class BookController {
     }
 
     /**
-     * delete tarot
+     * delete book
      *
      * @method destroy
      * @async
@@ -181,10 +181,10 @@ class BookController {
         const book = await Book.find(params.id);
         if (book !== null) {
             await book.delete();
-            const tarots = await Book.query()
+            const books = await Book.query()
                 .where('index', '>', book.index)
                 .fetch();
-            await this.queue(tarots.toJSON(), -1)
+            await this.queue(books.toJSON(), -1)
         }
         return response.success(null)
     }
