@@ -184,13 +184,13 @@ Route.group(() => {
     Route.get(`user/socket/:user_id`, `UserController.getSocket`).middleware([`all`, `required`]);
 
     /**
-     * Readers Routes
+     * Mentors Routes
      */
     Route.put(`/${(Engine.lower("mentor"))}/specialization/:id`, `MentorController.editSpecialization`).middleware([`mentor`, `aggregator`, `required`]);
-    resource(`/reader/schedule`, `MentorScheduleController`, [`mentor`, `aggregator`]);
+    resource(`/${(Engine.lower("mentor"))}/schedule`, `MentorScheduleController`, [`mentor`, `aggregator`]);
     Route.get(`/${(Engine.lower("mentor"))}s/schedules/available`, `MentorScheduleController.available`).middleware([`user`, `required`]);
-    Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:reader_id`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
-    Route.get(`/${(Engine.lower("mentor"))}s/date/available/:reader_id`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
+    Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
+    Route.get(`/${(Engine.lower("mentor"))}s/date/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
     Route.get(`/${(Engine.lower("mentor"))}s/detail/:username`, `MentorController.showByUsername`);
     Route.get(`/${(Engine.lower("mentor"))}s/active/most`, `MentorController.mostActive`).middleware([`aggregator`, `required`]);
 
@@ -270,8 +270,8 @@ Route.group(() => {
  * V1 Group Routes
  */
 Route.group(() => {
-    Route.get(`/readers/schedules/available/:reader_id`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
-    Route.get(`/readers/date/available/:reader_id`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
+    Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
+    Route.get(`/${(Engine.lower("mentor"))}s/date/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
 }).prefix(`v1`).namespace(`V1`);
 
 Route.any(`/`, function ({response}) {

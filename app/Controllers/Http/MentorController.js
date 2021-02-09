@@ -34,7 +34,7 @@ const Specialization = use('App/Models/ReaderSpecialization');
 const Engine = use('App/Helpers/Engine');
 
 /**
- * Reader Controller
+ * Mentor Controller
  *
  * @class MentorController
  */

@@ -17,7 +17,7 @@ const
     AggregatorMentor = use('App/Models/AggregatorMentor');
 
 /**
- * Reader Schedule Controller
+ * Mentor Schedule Controller
  *
  * @class MentorScheduleController
  */
