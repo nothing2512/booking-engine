@@ -15,7 +15,7 @@ class Engine {
      * @return String|boolean
      */
     static get(key) {
-        return Config.get(`config.${key}`)
+        return Config.get(`engine.${key}`)
     }
 
     /**
@@ -25,7 +25,7 @@ class Engine {
      * @return String|boolean
      */
     static title(key) {
-        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        return Config.get(`engine.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
             if (+match === 0) return "";
             return match.toUpperCase();
         });
@@ -38,7 +38,7 @@ class Engine {
      * @return String|boolean
      */
     static camel(key) {
-        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        return Config.get(`engine.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
             if (+match === 0) return "";
             return index === 0 ? match.toLowerCase() : match.toUpperCase();
         });
@@ -51,7 +51,7 @@ class Engine {
      * @return String|boolean
      */
     static snake(key) {
-        return Config.get(`config.${key}`).replace(/\W+/g, " ")
+        return Config.get(`engine.${key}`).replace(/\W+/g, " ")
             .split(/ |\B(?=[A-Z])/)
             .map(word => word.toLowerCase())
             .join('_');
@@ -64,7 +64,7 @@ class Engine {
      * @return String|boolean
      */
     static lower(key) {
-        return Config.get(`config.${key}`).toLowerCase()
+        return Config.get(`engine.${key}`).toLowerCase()
     }
 
     /**
@@ -74,7 +74,7 @@ class Engine {
      * @return String|boolean
      */
     static upper(key) {
-        return Config.get(`config.${key}`).toUpperCase()
+        return Config.get(`engine.${key}`).toUpperCase()
     }
 
     /**
@@ -84,7 +84,7 @@ class Engine {
      * @return String|boolean
      */
     static id(key) {
-        return Config.get(`config.${key}`).toLowerCase() + "_id"
+        return Config.get(`engine.${key}`).toLowerCase() + "_id"
     }
 }
 
