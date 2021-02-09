@@ -1,0 +1,23 @@
+# Node modules
+node_modules
+*lock*
+
+# Adonis directory for storing tmp files
+# tmp
+
+public/**
+
+# Environment variables, never commit this file
+.env
+
+# The development sqlite file
+database/*.sqlite
+
+# VSCode & Webstorm history directories
+.history
+.idea
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

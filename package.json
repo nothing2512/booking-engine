@@ -1,0 +1,46 @@
+{
+  "name": "Booking Engine",
+  "version": "0.5.0",
+  "adonis-version": "4.1.0",
+  "description": "Booking Engine API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node ace test"
+  },
+  "keywords": [
+    "ngajilagi"
+  ],
+  "engines": {
+    "node": "12.18.4"
+  },
+  "license": "SEE LICENSE IN ",
+  "private": true,
+  "dependencies": {
+    "@adonisjs/ace": "^5.0.8",
+    "@adonisjs/auth": "^3.1.0",
+    "@adonisjs/bodyparser": "^2.0.9",
+    "@adonisjs/cors": "^1.0.7",
+    "@adonisjs/drive": "^1.0.4",
+    "@adonisjs/fold": "^4.0.9",
+    "@adonisjs/framework": "^5.0.13",
+    "@adonisjs/ignitor": "^2.0.8",
+    "@adonisjs/lucid": "^6.2.1",
+    "@adonisjs/mail": "^3.0.10",
+    "@adonisjs/session": "^1.0.29",
+    "@adonisjs/shield": "^1.0.8",
+    "@adonisjs/validator": "^5.0.6",
+    "@adonisjs/vow": "^1.0.17",
+    "@adonisjs/websocket": "^1.0.12",
+    "aws-sdk": "^2.799.0",
+    "axios": "^0.21.0",
+    "csvtojson": "^2.0.10",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "pg": "^8.5.0",
+    "socket.io": "^3.0.4"
+  },
+  "autoload": {
+    "App": "./app"
+  }
+}

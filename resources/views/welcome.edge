@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello Adonis</title>
+  {{ style('style') }}
+</head>
+<body>
+  <section>
+    <div class="logo"></div>
+    <div class="title"></div>
+    <div class="subtitle">
+      <p>AdonisJs simplicity will make you feel confident about your code</p>
+      <p>
+        Don't know where to start? Read the <a href="https://adonisjs.com/docs">documentation</a>.
+      </p>
+    </div>
+  </section>
+  <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js"></script>
+
+  <script>
+  	var firebaseConfig = {
+  		apiKey: "AIzaSyD2xRj2VNfT_lSiXRGy6iLJ7Zn0TSR_Guc",
+  		authDomain: "ngajilagi-dev.firebaseapp.com",
+  		databaseURL: "https://ngajilagi-dev.firebaseio.com",
+  		projectId: "ngajilagi-dev",
+  		storageBucket: "ngajilagi-dev.appspot.com",
+  		messagingSenderId: "866035708824",
+  		appId: "1:866035708824:web:f40d243119f0d940b0f1ed",
+  		measurementId: "G-3XMCKLH9PX"
+  	};
+
+  	firebase.initializeApp(firebaseConfig);
+
+  	const messaging = firebase.messaging()
+
+  	messaging
+  	   .requestPermission()
+  	   .then(function () {
+  	        console.log("Notification permission granted.")
+  	        return messaging.getToken()
+  	    })
+  	   .then(function(token) {console.log("token", token)})
+  	   .catch(function (err) {console.log("Unable to get permission to notify.", err)});
+
+     messaging.onMessage((payload) => {console.log("payload", payload)})
+     messaging.onTokenRefresh(function(){ messaging.getToken().then(function(token) {console.log("token", token)}) })
+  </script>
+</body>
+</html>
