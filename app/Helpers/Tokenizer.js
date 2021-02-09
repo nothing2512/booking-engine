@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 /** @type {import('Encryption')} */
-const Encryption = use('Encryption')
+const Encryption = use('Encryption');
 
 /** @type {import('App/Models/LoginToken')} */
-const LoginToken = use('App/Models/LoginToken')
+const LoginToken = use('App/Models/LoginToken');
 
 /** @type {import('App/Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /**
  * Tokenizer Helper
@@ -33,8 +33,8 @@ class Tokenizer {
         const payload = {
             token: token,
             authenticator: authenticator
-        }
-        const encrypted = Encryption.encrypt(JSON.stringify(payload))
+        };
+        const encrypted = Encryption.encrypt(JSON.stringify(payload));
         return LoginToken.create({
             user_id: user.id,
             token: encrypted,
@@ -54,8 +54,8 @@ class Tokenizer {
      * @return {Promise<void>}
      */
     static async updateFcm(token, fcm) {
-        const loginToken = await LoginToken.findBy('token', token)
-        loginToken.merge({fcm: fcm})
+        const loginToken = await LoginToken.findBy('token', token);
+        loginToken.merge({fcm: fcm});
         await loginToken.save()
     }
 
@@ -70,12 +70,12 @@ class Tokenizer {
      * @return {Promise<[]>}
      */
     static async getSockets(user_id) {
-        const socketIds = []
+        const socketIds = [];
         const loginTokens = await LoginToken.query()
             .where('user_id', user_id)
-            .fetch()
+            .fetch();
 
-        for (let x of loginTokens.toJSON()) socketIds.push(x.socket_id)
+        for (let x of loginTokens.toJSON()) socketIds.push(x.socket_id);
         return socketIds
     }
 
@@ -91,8 +91,8 @@ class Tokenizer {
      * @return {Promise<void>}
      */
     static async updateSocket(token, socket_id) {
-        const loginToken = await LoginToken.findBy('token', token)
-        loginToken.merge({socket_id: socket_id})
+        const loginToken = await LoginToken.findBy('token', token);
+        loginToken.merge({socket_id: socket_id});
         await loginToken.save()
     }
 
@@ -107,7 +107,7 @@ class Tokenizer {
      * @returns {Promise<Model|Null>}
      */
     static async retrieveFromUsername(token) {
-        const username = atob(token)
+        const username = atob(token);
         return User.findBy('username', username);
     }
 
@@ -122,8 +122,8 @@ class Tokenizer {
      * @returns {Promise<null|any>}
      */
     static async retrieve(token) {
-        const loginToken = await LoginToken.findBy('token', token)
-        if (loginToken == null) return null
+        const loginToken = await LoginToken.findBy('token', token);
+        if (loginToken == null) return null;
 
         return JSON.parse(Encryption.decrypt(loginToken.token))
     }
@@ -140,11 +140,11 @@ class Tokenizer {
      * @returns {Promise<void>}
      */
     static async remove(token) {
-        const loginToken = await LoginToken.findBy('token', token)
-        console.log(token)
-        console.log(loginToken)
+        const loginToken = await LoginToken.findBy('token', token);
+        console.log(token);
+        console.log(loginToken);
         await loginToken.delete()
     }
 }
 
-module.exports = Tokenizer
+module.exports = Tokenizer;

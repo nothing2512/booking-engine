@@ -10,6 +10,9 @@ const LoginToken = use('App/Models/LoginToken');
 /** @type {import('App/Helpers/Tokenizer')} */
 const Tokenizer = use('App/Helpers/Tokenizer');
 
+/** @type {import('App/Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
+
 /** @type {import('App/Models/User')} */
 const User = use('App/Models/User');
 
@@ -32,7 +35,10 @@ class Confirmation {
      */
     static async test() {
         await Mail.send('email_confirmation', {
-            link: "Ini Url nya ya"
+            link: "Ini Url nya ya",
+            bg_color: Engine.get("bg_color"),
+            btn_color: Engine.get("btn_color"),
+            text_color: Engine.get("text_color")
         }, (message) => {
             message.to("blank345red@gmail.com")
                 .from('ezy.bacatarot@gmail.com')

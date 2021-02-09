@@ -1,11 +1,10 @@
-'use strict'
-
+'use strict';
 
 /** @type {typeof import('../Models/ActivityLog')} */
-const Log = use('App/Models/ActivityLog')
+const Log = use('App/Models/ActivityLog');
 
 /** @type {typeof import('../Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /**
  * Logger Helper
@@ -28,7 +27,7 @@ class Logger {
      * @param data
      * @returns {Promise<Model>}
      */
-    static async log(user, route, payload = {}, data="") {
+    static async log(user, route, payload = {}, data = "") {
         if (user == null) return Log.create(
             {
                 user_id: 0,
@@ -66,4 +65,4 @@ class Logger {
     }
 }
 
-module.exports = Logger
+module.exports = Logger;

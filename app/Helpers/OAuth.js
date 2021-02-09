@@ -1,7 +1,7 @@
-'use struct'
+'use struct';
 
 /** @type {import('axios')} */
-const Axios = require('axios')
+const Axios = require('axios');
 
 /**
  * OAuth Helper
@@ -26,14 +26,14 @@ class OAuth {
             status: false,
             message: "Access Token Required",
             data: null
-        }
+        };
 
-        let oAuth = {}
+        let oAuth = {};
 
         try {
             if (type == "google") oAuth = await Axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
                 headers: {Authorization: "Bearer " + accessToken}
-            })
+            });
             else await Axios.get(`https://graph.facebook.com/v9.0/me?fields=email&access_token=${accessToken}`)
         } catch (e) {
             return {
@@ -50,4 +50,4 @@ class OAuth {
     }
 }
 
-module.exports = OAuth
+module.exports = OAuth;

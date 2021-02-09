@@ -25,7 +25,7 @@ class Engine {
      * @return String|boolean
      */
     static title(key) {
-        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
             if (+match === 0) return "";
             return match.toUpperCase();
         });
@@ -38,7 +38,7 @@ class Engine {
      * @return String|boolean
      */
     static camel(key) {
-        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        return Config.get(`config.${key}`).replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
             if (+match === 0) return "";
             return index === 0 ? match.toLowerCase() : match.toUpperCase();
         });

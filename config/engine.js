@@ -26,6 +26,6 @@ module.exports = {
         key: Env.get("ZOOM_API_KEY")
     },
     bg_color: "#7D3D60",
-    bt_color: "#F4DD8F",
+    btn_color: "#F4DD8F",
     text_color: "#7D3D60"
 };

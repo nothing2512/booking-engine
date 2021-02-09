@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 /** @type {import('App/Models/LoginToken')} */
 const LoginToken = use('App/Models/LoginToken');
 
 /**@type {typeof import(App/Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /**
  * Socket Util Helper
@@ -43,4 +43,4 @@ class SocketUtil {
     }
 }
 
-module.exports = SocketUtil
+module.exports = SocketUtil;

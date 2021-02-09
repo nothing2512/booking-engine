@@ -25,22 +25,22 @@ class Payment {
             "Content-Type": "Application/Json",
             "Accept": "Application/Json",
             "Authorization": "Basic " + Buffer.from(serverKey + ":").toString('base64')
-        }
-        this.method = 0
+        };
+        this.method = 0;
 
-        this.BCA = 1
-        this.BNI = 2
-        this.BRI = 3
-        this.MANDIRI_BILL = 4
-        this.PERMATA = 5
-        this.GOPAY = 6
-        this.BCA_KLIKPAY = 7
-        this.CIMB_CLICKS = 8
-        this.DANAMON_ONLINE_BANKING = 9
-        this.E_PAY_BRI = 10
-        this.ALFAMARET = 11
-        this.INDOMARET = 12
-        this.AKULAKU = 13
+        this.BCA = 1;
+        this.BNI = 2;
+        this.BRI = 3;
+        this.MANDIRI_BILL = 4;
+        this.PERMATA = 5;
+        this.GOPAY = 6;
+        this.BCA_KLIKPAY = 7;
+        this.CIMB_CLICKS = 8;
+        this.DANAMON_ONLINE_BANKING = 9;
+        this.E_PAY_BRI = 10;
+        this.ALFAMARET = 11;
+        this.INDOMARET = 12;
+        this.AKULAKU = 13;
         this.CHECK = 100
     }
 
@@ -194,8 +194,8 @@ class Payment {
      * @returns {{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: string, redirect_link: string, transaction_status: string, price: string, bill_code: string, transaction_time: string, bill_key: string, order_id: string, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: *, transaction_time: *, bill_key: *, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}}
      */
     parse_response(data) {
-        if (typeof data === "string") data = JSON.parse(data)
-        data = data['data']
+        if (typeof data === "string") data = JSON.parse(data);
+        data = data['data'];
         switch (this.method) {
             case this.CHECK:
                 return {
@@ -208,7 +208,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": ""
-                }
+                };
             case this.BCA:
             case this.BNI:
             case this.BRI:
@@ -223,7 +223,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": ""
-                }
+                };
             case this.MANDIRI_BILL:
                 return {
                     "transaction_id": data['transaction_id'],
@@ -236,7 +236,7 @@ class Payment {
                     "bill_code": data['biller_code'],
                     "qr_link": "",
                     "redirect_link": ""
-                }
+                };
             case this.PERMATA:
                 return {
                     "transaction_id": data['transaction_id'],
@@ -249,14 +249,14 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": ""
-                }
+                };
             case this.GOPAY:
-                let qr_code = ""
-                let redirect_link = ""
+                let qr_code = "";
+                let redirect_link = "";
                 data['actions'].forEach(function (action) {
-                    if (action['name'] === "gengerate-qr-code") qr_code = action['url']
+                    if (action['name'] === "gengerate-qr-code") qr_code = action['url'];
                     if (action['name'] === "deeplink-redirect") redirect_link = action['url']
-                })
+                });
                 return {
                     "transaction_id": data['transaction_id'],
                     "order_id": data['order_id'],
@@ -268,7 +268,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": qr_code,
                     "redirect_link": redirect_link
-                }
+                };
             case this.BCA_KLIKPAY:
                 return {
                     "transaction_id": data['transaction_id'],
@@ -281,7 +281,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": data['redirect_data']['url']
-                }
+                };
             case this.CIMB_CLICKS:
             case this.DANAMON_ONLINE_BANKING:
             case this.E_PAY_BRI:
@@ -297,7 +297,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": data['redirect_url']
-                }
+                };
             case this.ALFAMARET:
             case this.INDOMARET:
                 return {
@@ -311,7 +311,7 @@ class Payment {
                     "bill_code": "",
                     "qr_link": "",
                     "redirect_link": ""
-                }
+                };
             default:
                 return {
                     "transaction_id": "",
@@ -341,45 +341,44 @@ class Payment {
      * @returns {Promise<{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: string, redirect_link: string, transaction_status: string, price: string, bill_code: string, transaction_time: string, bill_key: string, order_id: string, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: *, transaction_time: *, bill_key: *, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|boolean>}
      */
     async make(method, consultation_id, price, product = "") {
-        this.method = parseInt(method)
-        method = this.method
+        this.method = parseInt(method);
+        method = this.method;
 
-        let payment_type
-        let bank = ""
+        let payment_type;
+        let bank = "";
 
         switch (this.method) {
             case this.MANDIRI_BILL:
-                payment_type = "echannel"
-                break
+                payment_type = "echannel";
+                break;
             case this.PERMATA:
-                payment_type = "permata"
-                break
+                payment_type = "permata";
+                break;
             case this.GOPAY:
-                payment_type = "gopay"
-                break
+                payment_type = "gopay";
+                break;
             case this.BCA_KLIKPAY:
-                payment_type = "bca_klikpay"
-                break
+                payment_type = "bca_klikpay";
+                break;
             case this.CIMB_CLICKS:
-                payment_type = "cimb_clicks"
-                break
+                payment_type = "cimb_clicks";
+                break;
             case this.DANAMON_ONLINE_BANKING:
-                payment_type = "danamon_online"
-                break
+                payment_type = "danamon_online";
+                break;
             case this.E_PAY_BRI:
-                payment_type = "bri_epay"
-                break
+                payment_type = "bri_epay";
+                break;
             case this.ALFAMARET:
             case this.INDOMARET:
-                payment_type = "cstore"
-                break
+                payment_type = "cstore";
+                break;
             case this.AKULAKU:
-                payment_type = "akulaku"
-                break
+                payment_type = "akulaku";
+                break;
             default:
                 payment_type = "bank_transfer"
         }
-
 
         let data = {
             payment_type: payment_type,
@@ -387,26 +386,26 @@ class Payment {
                 order_id: "Bacatarot-" + consultation_id.toString(),
                 gross_amount: price
             }
-        }
+        };
 
-        if (method === this.BCA) data['bank_transfer'] = {bank: "bca"}
-        if (method === this.BNI) data['bank_transfer'] = {bank: "bca"}
-        if (method === this.BRI) data['bank_transfer'] = {bank: "bca"}
+        if (method === this.BCA) data['bank_transfer'] = {bank: "bca"};
+        if (method === this.BNI) data['bank_transfer'] = {bank: "bca"};
+        if (method === this.BRI) data['bank_transfer'] = {bank: "bca"};
 
         if (method === this.MANDIRI_BILL) data['echannel'] = {
             bill_info1: "purchase bacatarot\nProduct: " + product,
             bill_info2: "debt"
-        }
-        if (method === this.BCA_KLIKPAY) data['bca_klikpay'] = {description: "purchase bacatarot\nProduct: " + product}
-        if (method === this.CIMB_CLICKS) data['cimb_clicks'] = {description: "purchase bacatarot\nProduct: " + product}
+        };
+        if (method === this.BCA_KLIKPAY) data['bca_klikpay'] = {description: "purchase bacatarot\nProduct: " + product};
+        if (method === this.CIMB_CLICKS) data['cimb_clicks'] = {description: "purchase bacatarot\nProduct: " + product};
         if (method === this.INDOMARET) data['cstore'] = {
             store: "indomaret",
             message: "purchase bacatarot\nProduct: " + product
-        }
+        };
         if (method === this.ALFAMARET) data['cstore'] = {
             store: "alfamart",
             message: "purchase bacatarot\nProduct: " + product
-        }
+        };
 
         try {
             const response = await Axios({
@@ -414,10 +413,10 @@ class Payment {
                 url: this.baseUrl + "/charge",
                 headers: this.headers,
                 data: JSON.stringify(data)
-            })
+            });
             return this.parse_response(response)
         } catch (e) {
-            console.log(e)
+            console.log(e);
             return false
         }
     }
@@ -432,19 +431,19 @@ class Payment {
      * @returns {Promise<{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: string, redirect_link: string, transaction_status: string, price: string, bill_code: string, transaction_time: string, bill_key: string, order_id: string, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: *, transaction_time: *, bill_key: *, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|boolean>}
      */
     async check(midtrans_transaction_id) {
-        this.method = this.CHECK
+        this.method = this.CHECK;
         try {
             const response = await Axios({
                 method: "get",
                 url: this.baseUrl + "/" + midtrans_transaction_id.toString() + "/status",
                 headers: this.headers
-            })
+            });
             return this.parse_response(response)
         } catch (e) {
-            console.log(e)
+            console.log(e);
             return false
         }
     }
 }
 
-module.exports = Payment
+module.exports = Payment;
