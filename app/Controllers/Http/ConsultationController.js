@@ -20,7 +20,7 @@ const
     UserBalance = use('App/Models/UserBalance'),
 
     /**@type {typeof import('../../Models/Category')} */
-    Category = use('App/Models/TarotCategory'),
+    Category = use('App/Models/Category'),
 
     /**@type {typeof import('../../Helpers/Payment')} */
     Payment = use('App/Helpers/Payment'),
