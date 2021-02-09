@@ -37,9 +37,13 @@ class SocketUtil {
             .where("type", "admin")
             .fetch()).toJSON();
 
-        for (let token of loginToken) {
-            if (loginToken.socket_id != "") await global.io.to(loginToken.socket_id).emit(channel, data)
+        try {
+            for (let token of loginToken) {
+                if (loginToken.socket_id != "") await global.io.to(loginToken.socket_id).emit(channel, data)
+            }
+        } catch (e) {
         }
+
     }
 }
 

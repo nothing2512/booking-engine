@@ -9,6 +9,9 @@ const LoginToken = use('App/Models/LoginToken');
 /** @type {import('./Engine')} */
 const Engine = use('App/Helpers/Engine');
 
+/** @type {import('./SocketUtil')} */
+const SocketUtil = use('App/Helpers/SocketUtil');
+
 /** @type {import('App/Models/User')} */
 const User = use('App/Models/User');
 
@@ -33,6 +36,36 @@ class Fcm {
     }
 
     /**
+     * Test send fcm
+     *
+     * @static
+     * @async
+     * @method test
+     *
+     * @param fcm
+     * @param data
+     * @param type
+     * @return {Promise<*>}
+     */
+    static async test(fcm, data, type) {
+        const payloads = {registration_ids: [fcm], data: data, type: type};
+        try {
+            return await Axios({
+                method: "post",
+                url: Engine.get("fcm.url"),
+                headers: {
+                    'Content-Type': 'Application/Json',
+                    'Authorization': 'key=' + Engine.get("fcm.key")
+                },
+                data: JSON.stringify(payloads)
+            });
+        } catch (e) {
+            console.log(e);
+            return e.message
+        }
+    }
+
+    /**
      * Send Fcm
      *
      * @static
@@ -45,6 +78,7 @@ class Fcm {
      * @returns {Promise<boolean>}
      */
     static async send(user, data, type) {
+        await SocketUtil.send(user, type, data)
         return await (new Fcm()).send(user, data, type)
     }
 
