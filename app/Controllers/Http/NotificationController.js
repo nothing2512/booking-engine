@@ -34,7 +34,7 @@ class NotificationController {
     async detail(notification) {
         if (notification.type != 3) {
             const consultation = await Consultation.find(notification.parent_id)
-            const creader = await consultation.reader().fetch()
+            const creader = await consultation.mentor().fetch()
             const cuser = await consultation.user().fetch()
             cuser.profile = await cuser.profile().fetch()
             creader.profile = await creader.profile().fetch()

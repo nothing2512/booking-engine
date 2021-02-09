@@ -1,15 +1,15 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class TestimonialSchema extends Schema {
     up() {
         this.create('testimonials', (table) => {
-            table.increments()
-            table.string('reviewer_name').notNullable()
-            table.text('testi').notNullable()
-            table.string('picture_name')
+            table.increments();
+            table.string('reviewer_name').notNullable();
+            table.text('testi').notNullable();
+            table.string('picture_name');
             table.timestamps()
         })
     }
@@ -19,4 +19,4 @@ class TestimonialSchema extends Schema {
     }
 }
 
-module.exports = TestimonialSchema
+module.exports = TestimonialSchema;

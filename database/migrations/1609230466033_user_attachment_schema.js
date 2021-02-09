@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class UserAttachmentSchema extends Schema {
     up() {
         this.create('user_attachments', (table) => {
-            table.bigIncrements()
+            table.bigIncrements();
 
-            table.integer('user_id')
-            table.text('ktp')
-            table.text('ijazah')
-            table.text('license')
+            table.integer('user_id');
+            table.text('ktp');
+            table.text('ijazah');
+            table.text('license');
 
             table.timestamps()
         })
@@ -22,4 +22,4 @@ class UserAttachmentSchema extends Schema {
     }
 }
 
-module.exports = UserAttachmentSchema
+module.exports = UserAttachmentSchema;

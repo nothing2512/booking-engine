@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Role Santri Middleware
+ * Role User Middleware
  *
  * @class RoleUser
  */

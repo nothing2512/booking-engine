@@ -2,7 +2,7 @@
 
 
 const
-    /**@type {typeof import('../../../Models/ReaderSchedule')} */
+    /**@type {typeof import('../../../Models/MentorSchedule')} */
     Schedule = use('App/Models/ReaderSchedule'),
 
     /**@type {typeof import('../../../Models/Consultation')} */
@@ -11,7 +11,7 @@ const
     /**@type {typeof import('../../../Models/User')} */
     User = use('App/Models/User'),
 
-    /**@type {typeof import('../../../Models/AggregatorReader')} */
+    /**@type {typeof import('../../../Models/AggregatorMentor')} */
     AggregatorReader = use('App/Models/AggregatorReader'),
 
     /** @type {import('@adonisjs/lucid/src/Database')} */

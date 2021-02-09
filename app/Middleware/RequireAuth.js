@@ -38,7 +38,7 @@ class RequireAuth {
 
             if (user instanceof User) {
                 if (user.role_id == 1) isAccessible = access.includes("user");
-                else if (user.role_id == 2) isAccessible = access.includes("reader");
+                else if (user.role_id == 2) isAccessible = access.includes("mentor");
                 else if (user.role_id == 3) isAccessible = access.includes("aggregator");
                 else isAccessible = false
             } else {

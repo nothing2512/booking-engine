@@ -45,6 +45,8 @@ class ConvertAuth {
 
         const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude']);
         const headers = request.headers();
+        const urlAction = request.method().toLowerCase() + ":" + decodeURI(request.url());
+        const data = JSON.stringify(request.all());
 
         headers.role_access = [];
         headers.unlock_access = false;
@@ -52,7 +54,10 @@ class ConvertAuth {
         request.headers(headers);
 
         const authorization = headers.authorization;
-        if (authorization == null || authorization == "" || authorization == undefined) return next();
+        if (authorization == null || authorization == "" || authorization == undefined) {
+            await Logger.log(null, urlAction, logPayload, data);
+            return next();
+        }
 
         const token = await Tokenizer.retrieve(authorization.split(" ")[1]);
         if (token == null) return response.missmatch();
@@ -63,9 +68,7 @@ class ConvertAuth {
         auth.authenticatorInstance = auth.authenticator(token.authenticator);
 
         const user = await auth.getUser();
-        const urlAction = request.method().toLowerCase() + ":" + decodeURI(request.url().replace("/v0.5.0", ""));
-
-        await Logger.log(user, urlAction, logPayload);
+        await Logger.log(user, urlAction, logPayload, data);
 
         return await next()
     }

@@ -25,13 +25,25 @@ class Logger {
      * @param user
      * @param route
      * @param payload
+     * @param data
      * @returns {Promise<Model>}
      */
-    static async log(user, route, payload = {}) {
+    static async log(user, route, payload = {}, data="") {
+        if (user == null) return Log.create(
+            {
+                user_id: 0,
+                type: "guest",
+                action: route,
+                data: data,
+                ...payload
+            }
+        );
+
         return Log.create({
             user_id: user.id,
             type: user instanceof User ? "user" : "admin",
             action: route,
+            data: data,
             ...payload
         });
     }

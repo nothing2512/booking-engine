@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class CitySchema extends Schema {
     up() {
         this.create('cities', (table) => {
-            table.integer('id').primary()
-            table.integer('province_id')
+            table.integer('id').primary();
+            table.integer('province_id');
             table.string('name').notNullable()
         })
     }
@@ -17,4 +17,4 @@ class CitySchema extends Schema {
     }
 }
 
-module.exports = CitySchema
+module.exports = CitySchema;

@@ -1,7 +1,10 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
+
+/** @type {typeof import('../Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /**
  * Consultation Model
@@ -74,7 +77,7 @@ class Consultation extends Model {
      * @returns {HasOne}
      */
     category() {
-        return this.hasOne('App/Models/TarotCategory', 'category_id', 'id')
+        return this.hasOne('App/Models/BookCategory', "category_id", 'id')
     }
 
     /**
@@ -85,8 +88,8 @@ class Consultation extends Model {
      * @returns {HasOne}
      */
     reader() {
-        return this.hasOne('App/Models/User', 'reader_id', 'id')
+        return this.hasOne('App/Models/User', Engine.id("mentor"), 'id')
     }
 }
 
-module.exports = Consultation
+module.exports = Consultation;

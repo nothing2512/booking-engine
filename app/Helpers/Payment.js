@@ -1,10 +1,10 @@
-'use strict'
-
-/** @type {import('@adonisjs/framework/src/Env')} */
-const Env = use('Env')
+'use strict';
 
 /** @type {import('axios')} */
-const Axios = require('axios')
+const Axios = require('axios');
+
+/** @type {import('./Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /**
  * Payment Helper
@@ -18,9 +18,9 @@ class Payment {
      * constructor
      */
     constructor() {
-        const is_production = Env.get('MIDTRANS_IS_PRODUCTION', "false")
-        const serverKey = is_production === "true" ? Env.get('MIDTRANS_PRODUCTION_KEY', '') : Env.get('MIDTRANS_SANDBOX_KEY', '')
-        this.baseUrl = is_production === "true" ? Env.get('MIDTRANS_URL', '') : Env.get('MIDTRANS_SANDBOX_URL', '')
+        const is_production = Engine.get('midtrans.is_production');
+        const serverKey = is_production ? Engine.get("midtrans.production_key") : Engine.get("midtrans.sandbox_key");
+        this.baseUrl = is_production === "true" ? Engine.get("midtrans.url") : Engine.get("midtrans.sandbox_url");
         this.headers = {
             "Content-Type": "Application/Json",
             "Accept": "Application/Json",

@@ -15,13 +15,13 @@ const UserProfile = use('App/Models/UserProfile')
 /** @type {typeof import('../../Models/AggregatorProfile')} */
 const AggregatorProfile = use('App/Models/AggregatorProfile')
 
-/** @type {typeof import('../../Models/AggregatorReader')} */
+/** @type {typeof import('../../Models/AggregatorMentor')} */
 const AggregatorReader = use('App/Models/AggregatorReader')
 
 /** @type {typeof import('../../Models/UserAttachment')} */
 const UserAttachment = use('App/Models/UserAttachment')
 
-/** @type {typeof import('../../Models/ReaderJoinRequest')} */
+/** @type {typeof import('../../Models/MentorJoinRequest')} */
 const ReaderJoinRequest = use('App/Models/ReaderJoinRequest')
 
 /** @type {typeof import('../../Models/Notification')} */
@@ -51,7 +51,7 @@ const UserReferral = use('App/Models/UserReferral')
 /** @type {typeof import('../../Models/UserVoucher')} */
 const UserVoucher = use('App/Models/UserVoucher')
 
-/** @type {typeof import('../../Models/TarotCategory')} */
+/** @type {typeof import('../../Models/Category')} */
 const Category = use('App/Models/TarotCategory')
 
 /** @type {typeof import('../../Helpers/OAuth')} */

@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
+const Hash = use('Hash');
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
 
 /**
  * Admin Model
@@ -40,7 +40,7 @@ class Admin extends Model {
      * @static
      */
     static boot() {
-        super.boot()
+        super.boot();
 
         /**
          * A hook to hash the user password before saving
@@ -91,4 +91,4 @@ class Admin extends Model {
 
 }
 
-module.exports = Admin
+module.exports = Admin;

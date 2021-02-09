@@ -12,7 +12,7 @@ const UserProfile = use('App/Models/UserProfile')
 /**@type {typeof import('../../Models/AggregatorProfile')} */
 const AggregatorProfile = use('App/Models/AggregatorProfile')
 
-/** @type {typeof import('../../Models/AggregatorReader')} */
+/** @type {typeof import('../../Models/AggregatorMentor')} */
 const AggregatorReader = use('App/Models/AggregatorReader')
 
 /** @type {typeof import('../../Helpers/Uploader')} */

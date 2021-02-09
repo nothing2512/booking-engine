@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 class RtcController {
 
     constructor(socket, io) {
-        this.socket = socket
-        this.io = io
+        this.socket = socket;
+        this.io = io;
 
         socket.on('create_room', roomNumber => {
             const rooms = socket.adapter.rooms.get(roomNumber);
@@ -51,21 +51,21 @@ class RtcController {
 
         socket.on('ustad_candidate', (evt) => {
             socket.broadcast.to(evt.room).emit('ustad_candidate', evt.candidate)
-        })
+        });
 
         socket.on('mute', (room) => {
             socket.broadcast.to(room).emit('mute')
-        })
+        });
 
         socket.on('unmute', (room) => {
             socket.broadcast.to(room).emit('unmute')
-        })
+        });
 
         const leaveRoom = (room) => {
             socket.leave(room)
-        }
+        };
 
-        socket.on('disconnect', leaveRoom)
+        socket.on('disconnect', leaveRoom);
         io.on('disconnect', leaveRoom)
     }
 
@@ -85,4 +85,4 @@ class RtcController {
     }
 }
 
-module.exports = RtcController
+module.exports = RtcController;

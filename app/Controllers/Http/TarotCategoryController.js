@@ -2,7 +2,7 @@
 
 
 const
-    /**@type {typeof import('../../Models/TarotCategory')} */
+    /**@type {typeof import('../../Models/Category')} */
     TarotCategory = use('App/Models/TarotCategory'),
 
     /** @type {typeof import('../../Helpers/Uploader')} */

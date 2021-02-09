@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class ConsultationNotesSchema extends Schema {
     up() {
         this.create('consultation_notes', (table) => {
-            table.increments()
+            table.increments();
 
-            table.integer('consultation_id')
-            table.integer('tarot_id')
-            table.string('title')
-            table.text('notes')
+            table.integer('consultation_id');
+            table.integer('category_id');
+            table.string('title');
+            table.text('notes');
 
             table.timestamps()
         })
@@ -22,4 +22,4 @@ class ConsultationNotesSchema extends Schema {
     }
 }
 
-module.exports = ConsultationNotesSchema
+module.exports = ConsultationNotesSchema;

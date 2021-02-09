@@ -1,6 +1,6 @@
 'use strict'
 
-/** @type {typeof import('../../Models/ReaderJoinRequest')} */
+/** @type {typeof import('../../Models/MentorJoinRequest')} */
 const ReaderJoinRequest = use('App/Models/ReaderJoinRequest')
 
 /** @type {typeof import('../../Helpers/Fcm')} */

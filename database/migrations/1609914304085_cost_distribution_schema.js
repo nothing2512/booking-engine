@@ -1,17 +1,20 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
+
+/** @type {import('App/Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 class CostDistributionSchema extends Schema {
     up() {
         this.create('cost_distributions', (table) => {
-            table.bigIncrements()
+            table.bigIncrements();
 
-            table.integer('aggregator_id')
-            table.integer("bacatarot").defaultTo(20)
-            table.integer("aggregator").defaultTo(20)
-            table.integer("reader").defaultTo(80)
+            table.integer(Engine.id("aggregator"));
+            table.integer(Engine.lower("app")).defaultTo(20);
+            table.integer(Engine.lower("aggregator")).defaultTo(20);
+            table.integer(Engine.lower("mentor")).defaultTo(80);
 
             table.timestamps()
         })
@@ -22,4 +25,4 @@ class CostDistributionSchema extends Schema {
     }
 }
 
-module.exports = CostDistributionSchema
+module.exports = CostDistributionSchema;

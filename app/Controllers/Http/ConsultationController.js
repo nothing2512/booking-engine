@@ -7,7 +7,7 @@ const
     /**@type {typeof import('../../Models/AggregatorProfile')} */
     AggregatorProfile = use('App/Models/AggregatorProfile'),
 
-    /**@type {typeof import('../../Models/AggregatorReader')} */
+    /**@type {typeof import('../../Models/AggregatorMentor')} */
     AggregatorReader = use('App/Models/AggregatorReader'),
 
     /**@type {typeof import('../../Models/User')} */
@@ -19,7 +19,7 @@ const
     /**@type {typeof import('../../Models/UserBalance')} */
     UserBalance = use('App/Models/UserBalance'),
 
-    /**@type {typeof import('../../Models/TarotCategory')} */
+    /**@type {typeof import('../../Models/Category')} */
     Category = use('App/Models/TarotCategory'),
 
     /**@type {typeof import('../../Helpers/Payment')} */
@@ -103,7 +103,7 @@ class ConsultationController {
         consultation.user = cuser
         consultation.reader = creader
         consultation.voucher = await consultation.voucher().fetch()
-        consultation.chats = await consultation.chats().orderBy('created_at', 'desc').fetch()
+        consultation.chats = await consultation.chats().orderBy('created_at', 'asc').fetch()
         consultation.category = await consultation.category().fetch()
         consultation = consultation.toJSON()
 

@@ -13,7 +13,7 @@ const
     /**@type {typeof import('../../Models/UserBalance')} */
     Balance = use('App/Models/UserBalance'),
 
-    /**@type {typeof import('../../Models/BacatarotProfile')} */
+    /**@type {typeof import('../../Models/AppProfile')} */
     BacatarotProfile = use('App/Models/BacatarotProfile'),
 
     /**@type {typeof import('../../Models/User')} */
@@ -25,7 +25,7 @@ const
     /** @type {typeof import('../../Helpers/Fcm')} */
     Fcm = use('App/Helpers/Fcm'),
 
-    /**@type {typeof import('../../Models/AggregatorReader')} */
+    /**@type {typeof import('../../Models/AggregatorMentor')} */
     AggregatorReader = use('App/Models/AggregatorReader'),
 
     /**@type {typeof import('../../Models/UserProfile')} */

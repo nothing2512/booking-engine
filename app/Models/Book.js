@@ -1,15 +1,27 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
+
+/** @type {typeof import('../Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /**
- * Tarot Model
+ * Book Model
  *
- * @class Tarot
+ * @class Book
  * @extends Model
  */
-class Tarot extends Model {
+class Book extends Model {
+
+    /**
+     * get table name
+     *
+     * @return {string}
+     */
+    static get table() {
+        return `${Engine.lower("book")}s`
+    }
 
     /**
      * Method to be called only once to boot
@@ -26,15 +38,15 @@ class Tarot extends Model {
      * @static
      */
     static boot() {
-        super.boot()
+        super.boot();
 
         /**
          * a hook to set index before it save to database
          */
         this.addHook('beforeSave', async (instance) => {
-            if (isNaN(instance.index)) instance.index = await Tarot.query().getCount() + 1
+            if (isNaN(instance.index)) instance.index = await Book.query().getCount() + 1
         })
     }
 }
 
-module.exports = Tarot
+module.exports = Book;

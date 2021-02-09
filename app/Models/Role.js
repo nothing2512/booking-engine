@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
 
 /** @type {typeof import('@adonisjs/validator/src/Validator')} */
-const {sanitizor} = use('Validator')
+const {sanitizor} = use('Validator');
 
 /**
  * Role Model
@@ -29,7 +29,7 @@ class Role extends Model {
      * @static
      */
     static boot() {
-        super.boot()
+        super.boot();
 
         /**
          * a hook to create slug before it save to database
@@ -52,4 +52,4 @@ class Role extends Model {
 
 }
 
-module.exports = Role
+module.exports = Role;

@@ -10,9 +10,6 @@
 |
 */
 
-/** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
-
 /** @type {import('App/Models/Admin')} */
 const Admin = use('App/Models/Admin')
 
@@ -20,7 +17,7 @@ class AdminSeeder {
   async run () {
       await Admin.create({
           username: "superman",
-          email: "superman@bacatarot.com",
+          email: "superman@gmail.com",
           password: "semuasama",
           name: "Superman",
           role_id: 1
@@ -28,4 +25,4 @@ class AdminSeeder {
   }
 }
 
-module.exports = AdminSeeder
+module.exports = AdminSeeder;

@@ -87,24 +87,24 @@ Route.group(() => {
     /**
      * Consultation Chat Routes
      */
-    Route.get("/consultation/chats", "ConsultationChatController.index").middleware(["user", "reader", "aggregator", "required"])
-    Route.get("/consultation/chats/:id", "ConsultationChatController.show").middleware(["user", "reader", "aggregator", "required"])
-    Route.post("/consultation/chats/:id", "ConsultationChatController.store").middleware(["user", "reader", "required"])
-    Route.put("/consultation/chats/:id", "ConsultationChatController.update").middleware(["user", "reader", "required"])
-    Route.delete("/consultation/chats/:id", "ConsultationChatController.delete").middleware(["user", "reader", "required"])
+    Route.get("/consultation/chats", "ConsultationChatController.index").middleware(["user", "mentor", "aggregator", "required"])
+    Route.get("/consultation/chats/:id", "ConsultationChatController.show").middleware(["user", "mentor", "aggregator", "required"])
+    Route.post("/consultation/chats/:id", "ConsultationChatController.store").middleware(["user", "mentor", "required"])
+    Route.put("/consultation/chats/:id", "ConsultationChatController.update").middleware(["user", "mentor", "required"])
+    Route.delete("/consultation/chats/:id", "ConsultationChatController.delete").middleware(["user", "mentor", "required"])
 
     /**
      * Consultation And Booking Routes
      */
-    Route.get('/consultation/next', 'ConsultationController.nextConsultation').middleware(["user", "reader", "required"]);
-    Route.get('/consultation/sorted', 'ConsultationController.indexByDate').middleware(["user", "reader", "required"]);
-    Route.get("/consultation", "ConsultationController.index").middleware(["user", "reader", "aggregator", "required"]);
-    Route.get("/consultation/:id", "ConsultationController.show").middleware(["user", "reader", "aggregator", "required"]);
+    Route.get('/consultation/next', 'ConsultationController.nextConsultation').middleware(["user", "mentor", "required"]);
+    Route.get('/consultation/sorted', 'ConsultationController.indexByDate').middleware(["user", "mentor", "required"]);
+    Route.get("/consultation", "ConsultationController.index").middleware(["user", "mentor", "aggregator", "required"]);
+    Route.get("/consultation/:id", "ConsultationController.show").middleware(["user", "mentor", "aggregator", "required"]);
     Route.post("/consultation", "ConsultationController.store").middleware(["user", "required"]);
-    resource("/consultations/note", "ConsultationNoteController", ["user", "reader", "aggregator"], false, false);
+    resource("/consultations/note", "ConsultationNoteController", ["user", "mentor", "aggregator"], false, false);
     Route.get('/payment/methods', 'ConsultationController.paymentMethods');
-    Route.get('/consultation/approve/:id', 'ConsultationController.approve').middleware(["reader", "required"]);
-    Route.get('/consultation/reject/:id', 'ConsultationController.reject').middleware(["reader", "required"]);
+    Route.get('/consultation/approve/:id', 'ConsultationController.approve').middleware(["mentor", "required"]);
+    Route.get('/consultation/reject/:id', 'ConsultationController.reject').middleware(["mentor", "required"]);
     Route.get('/consultation/readers/replacement/:id', 'ConsultationController.findReplacement').middleware(["user", "required"]);
     Route.post('/consultation/readers/replace', 'ConsultationController.replaceReader').middleware(["user", "required"]);
     Route.get('/consultation/readers/booked', 'ConsultationController.bookedReader').middleware(["user", "required"]);
@@ -138,12 +138,12 @@ Route.group(() => {
     /**
      * News Category Routes
      */
-    resource("/news/category", "NewsCategoryController", ["writer", "aggregator", "reader"]);
+    resource("/news/category", "NewsCategoryController", ["writer", "aggregator", "mentor"]);
 
     /**
      * News Route
      */
-    resource("/news", "NewsController", ["writer", "aggregator", "reader"]);
+    resource("/news", "NewsController", ["writer", "aggregator", "mentor"]);
 
     /**
      * Notifications Routes
@@ -170,12 +170,12 @@ Route.group(() => {
     /**
      * User Attachment Routes
      */
-    resource("/user/attachments", "UserAttachmentController", ["user", "reader", "aggregator"]);
+    resource("/user/attachments", "UserAttachmentController", ["user", "mentor", "aggregator"]);
 
     /**
      * User Routes
      */
-    Route.put('users/:id/profile', 'ProfileController.update').middleware(["user", "reader", "aggregator", 'required']);
+    Route.put('users/:id/profile', 'ProfileController.update').middleware(["user", "mentor", "aggregator", 'required']);
     Route.post('user/fcm', 'UserController.fcm').middleware(['all', 'required']);
     Route.post('user/socket/id', 'UserController.socket_id').middleware(['all', 'required']);
     Route.get('user/socket/:user_id', 'UserController.getSocket').middleware(['all', 'required']);
@@ -183,8 +183,8 @@ Route.group(() => {
     /**
      * Readers Routes
      */
-    Route.put("/reader/specialization/:id", "ReaderController.editReaderSpecialization").middleware(["reader", "aggregator", "required"]);
-    resource("/reader/schedule", "ReaderScheduleController", ["reader", "aggregator"]);
+    Route.put("/reader/specialization/:id", "ReaderController.editReaderSpecialization").middleware(["mentor", "aggregator", "required"]);
+    resource("/reader/schedule", "ReaderScheduleController", ["mentor", "aggregator"]);
     Route.get('/readers/schedules/available', 'ReaderScheduleController.available').middleware(['user', 'required']);
     Route.get('/readers/schedules/available/:reader_id', 'ReaderScheduleController.timeAvailable').middleware(['user', 'required']);
     Route.get('/readers/date/available/:reader_id', 'ReaderScheduleController.dateAvailable').middleware(['user', 'required']);
@@ -203,11 +203,6 @@ Route.group(() => {
     Route.get("/user/voucher", "UserVoucherController.index").middleware(["user", "required"]);
     Route.get("/user/voucher/:code", "UserVoucherController.show").middleware(["user", "required"]);
     Route.post("/user/voucher/insert/:code", "UserVoucherController.store").middleware(["user", "required"]);
-
-    /**
-     * web Contents Route
-     */
-    resource("/contents", "WebContentController", ["writer", "aggregator"]);
 
     /**
      * Welcoming Route

@@ -1,28 +1,28 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class UserProfileSchema extends Schema {
     up() {
         this.create('user_profiles', (table) => {
-            table.bigIncrements()
-            table.bigInteger('user_id').notNullable()
+            table.bigIncrements();
+            table.bigInteger('user_id');
 
-            table.string('name').notNullable()
-            table.date('date_of_birth')
-            table.string('place_of_birth')
-            table.string('education')
-            table.string('occupation')
-            table.string('marriage_status')
-            table.string('phone_number')
-            table.string('profile_image')
-            table.text('address')
-            table.json('location')
+            table.string('name');
+            table.date('date_of_birth');
+            table.string('place_of_birth');
+            table.string('education');
+            table.string('occupation');
+            table.string('marriage_status');
+            table.string('phone_number');
+            table.string('profile_image');
+            table.text('address');
+            table.text('location');
 
-            table.integer('district_id')
-            table.integer('city_id')
-            table.integer('province_id')
+            table.integer('district_id');
+            table.integer('city_id');
+            table.integer('province_id');
 
             table.timestamps()
         })
@@ -33,5 +33,5 @@ class UserProfileSchema extends Schema {
     }
 }
 
-module.exports = UserProfileSchema
+module.exports = UserProfileSchema;
 

@@ -1,13 +1,13 @@
 'use strict';
 
-/** @type {import('@adonisjs/framework/src/Env')} */
-const Env = use('Env');
-
 /** @type {import('axios')} */
 const Axios = require('axios');
 
 /** @type {import('App/Models/LoginToken')} */
 const LoginToken = use('App/Models/LoginToken');
+
+/** @type {import('./Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /** @type {import('App/Models/User')} */
 const User = use('App/Models/User');
@@ -24,8 +24,8 @@ class Fcm {
      * constructor
      */
     constructor() {
-        const server_key = Env.get('FCM_KEY', '');
-        this.uri = Env.get('FCM_URL', '');
+        const server_key = Engine.get("fcm.key");
+        this.uri = Engine.get("fcm.url");
         this.headers = {
             'Content-Type': 'Application/Json',
             'Authorization': 'key=' + server_key

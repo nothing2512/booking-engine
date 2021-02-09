@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| BacatarotProfileSeeder
+| AppProfileSeeder
 |--------------------------------------------------------------------------
 |
 | Make use of the Factory instance to seed database with dummy data or
@@ -10,18 +10,15 @@
 |
 */
 
-/** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
+/**@type {typeof import('app/Models/AppProfile')} */
+const AppProfile = use('App/Models/AppProfile');
 
-/**@type {typeof import('App/Models/BacatarotProfile')} */
-const BacatarotProfile = use('App/Models/BacatarotProfile')
-
-class BacatarotProfileSeeder {
+class AppProfileSeeder {
     async run () {
-        await BacatarotProfile.create({
+        await AppProfile.create({
             balance: 0
         })
     }
 }
 
-module.exports = BacatarotProfileSeeder
+module.exports = AppProfileSeeder;

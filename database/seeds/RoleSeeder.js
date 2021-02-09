@@ -10,13 +10,14 @@
 |
 */
 
-/** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
-
 /**@type {typeof import('App/Models/RoleAdmin')} */
-const RoleAdmin = use('App/Models/RoleAdmin')
+const RoleAdmin = use('App/Models/RoleAdmin');
 
-const Database = use('Database')
+/**@type {typeof import('App/Models/Role')} */
+const Role = use('App/Models/Role');
+
+/**@type {typeof import('App/Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 class RoleSeeder {
     async run() {
@@ -36,26 +37,26 @@ class RoleSeeder {
                 slug: "writer",
                 description: "content writer"
             }
-        ])
+        ]);
 
-        await Database.table("roles").insert([
+        await Role.create([
             {
-                name: "User",
-                slug: "user",
-                description: "user"
+                name: Engine.title("user"),
+                slug: Engine.lower("user"),
+                description: Engine.lower("user")
             },
             {
-                name: "Reader",
-                slug: "reader",
-                description: "reader"
+                name: Engine.title("mentor"),
+                slug: Engine.lower("mentor"),
+                description: Engine.lower("mentor")
             },
             {
-                name: "Aggregator",
-                slug: "aggregator",
-                description: "aggregator"
+                name: Engine.title("aggregator"),
+                slug: Engine.lower("aggregator"),
+                description: Engine.lower("aggregator")
             }
         ])
     }
 }
 
-module.exports = RoleSeeder
+module.exports = RoleSeeder;

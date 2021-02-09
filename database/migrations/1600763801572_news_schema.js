@@ -1,22 +1,22 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class NewsSchema extends Schema {
     up() {
         this.create('news', (table) => {
-            table.bigIncrements()
+            table.bigIncrements();
 
-            table.integer('author_id')
-            table.string("author_type")
+            table.integer('author_id');
+            table.string("author_type");
 
-            table.text('content')
-            table.string('title')
-            table.string('slug')
-            table.string('header_image')
+            table.text('content');
+            table.string('title');
+            table.string('slug');
+            table.string('header_image');
 
-            table.integer('category_id')
+            table.integer('category_id');
 
             table.timestamps()
         })
@@ -27,4 +27,4 @@ class NewsSchema extends Schema {
     }
 }
 
-module.exports = NewsSchema
+module.exports = NewsSchema;

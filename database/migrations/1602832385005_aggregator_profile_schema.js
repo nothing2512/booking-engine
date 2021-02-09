@@ -1,27 +1,30 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
+
+/** @type {import('App/Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 class AggregatorProfileSchema extends Schema {
     up() {
-        this.create('aggregator_profiles', (table) => {
-            table.bigIncrements()
-            table.bigInteger('user_id').notNullable()
+        this.create(`${Engine.lower("aggregator")}_profiles`, (table) => {
+            table.bigIncrements();
+            table.bigInteger('user_id');
 
-            table.string('name').notNullable()
-            table.text('address').notNullable()
-            table.string('logo')
-            table.boolean('isCommunity').notNullable().defaultTo(false)
-            table.integer('reader_price').defaultTo(10000)
+            table.string('name');
+            table.text('address');
+            table.string('logo');
+            table.boolean('isCommunity').defaultTo(false);
+            table.integer(`${Engine.lower("mentor")}_price`).defaultTo(10000);
 
             table.timestamps()
         })
     }
 
     down() {
-        this.drop('aggregator_profiles')
+        this.drop(`${Engine.lower("aggregator")}_profiles`)
     }
 }
 
-module.exports = AggregatorProfileSchema
+module.exports = AggregatorProfileSchema;

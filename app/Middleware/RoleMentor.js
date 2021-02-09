@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * Role Counselor Middleware
+ * Role Mentor Middleware
  *
- * @class RoleReader
+ * @class RoleMentor
  */
-class RoleReader {
+class RoleMentor {
 
     /**
      * adding role access
@@ -21,11 +21,11 @@ class RoleReader {
     async handle({request, response}, next) {
 
         const headers = request.headers();
-        headers.role_access.push("reader");
+        headers.role_access.push("mentor");
         request.headers(headers);
 
         return await next()
     }
 }
 
-module.exports = RoleReader;
+module.exports = RoleMentor;

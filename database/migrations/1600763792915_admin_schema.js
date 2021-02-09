@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class AdminSchema extends Schema {
     up() {
         this.create('admins', (table) => {
-            table.bigIncrements()
-            table.string('username', 80).notNullable().unique()
-            table.string('email', 254).notNullable().unique()
-            table.string('password', 60).notNullable()
-            table.string('name', 100).notNullable()
-            table.integer("role_id").notNullable()
+            table.bigIncrements();
+            table.string('username', 80).unique();
+            table.string('email', 254).unique();
+            table.string('password', 60);
+            table.string('name', 100);
+            table.integer("role_id");
             table.timestamps()
         })
     }
@@ -21,4 +21,4 @@ class AdminSchema extends Schema {
     }
 }
 
-module.exports = AdminSchema
+module.exports = AdminSchema;

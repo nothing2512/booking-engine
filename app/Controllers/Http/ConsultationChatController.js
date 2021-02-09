@@ -19,7 +19,7 @@ const
     /** @type {import('@adonisjs/lucid/src/Database')} */
     Database = use('Database'),
 
-    /**@type {typeof import('../../Models/AggregatorReader')} */
+    /**@type {typeof import('../../Models/AggregatorMentor')} */
     AggregatorReader = use('App/Models/AggregatorReader')
 
 class ConsultationChatController {
@@ -41,7 +41,7 @@ class ConsultationChatController {
         consultation.reader = reader
         consultation.user = user
 
-        consultation.chats = await consultation.chats().orderBy('created_at', 'desc').fetch()
+        consultation.chats = await consultation.chats().orderBy('created_at', 'asc').fetch()
 
         return consultation
     }
@@ -147,7 +147,7 @@ class ConsultationChatController {
         })
 
         let fcmUser
-        if (authUser.role_id == 1) fcmUser = await consultation.reader().fetch()
+        if (authUser.role_id == 1) fcmUser = await consultation.mentor().fetch()
         else fcmUser = await consultation.user().fetch()
 
         await Fcm.send(fcmUser, chat, "chat")

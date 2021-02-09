@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class FaqSchema extends Schema {
     up() {
         this.create('faqs', (table) => {
-            table.bigIncrements()
-            table.text("question").notNullable()
-            table.text('answer').notNullable()
+            table.bigIncrements();
+            table.text("question").notNullable();
+            table.text('answer').notNullable();
             table.timestamps()
         })
     }
@@ -18,4 +18,4 @@ class FaqSchema extends Schema {
     }
 }
 
-module.exports = FaqSchema
+module.exports = FaqSchema;

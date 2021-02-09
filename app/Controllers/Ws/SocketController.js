@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Socket Controller
@@ -37,7 +37,7 @@ class SocketController {
          */
         socket.on('notification', (args) => {
             for (let to of args.to) socket.to(to).emit('notification', args.data)
-        })
+        });
 
         /**
          * Socket On read_pointer
@@ -49,7 +49,7 @@ class SocketController {
          */
         socket.on('read_pointer', (args) => {
             for (let to of args.to) socket.to(to).emit('read_pointer', args.id)
-        })
+        });
 
         /**
          * Socket On Chat
@@ -80,4 +80,4 @@ class SocketController {
     }
 }
 
-module.exports = SocketController
+module.exports = SocketController;

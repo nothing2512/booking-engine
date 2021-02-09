@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Role Content Writer Middleware
+ * All Role Middleware
  *
  * @class RoleAll
  */

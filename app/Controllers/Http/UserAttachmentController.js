@@ -7,7 +7,7 @@ const
     /** @type {import('../../Models/UserAttachment')} */
     UserAttachment = use('App/Models/UserAttachment'),
 
-    /** @type {import('../../Models/AggregatorReader')} */
+    /** @type {import('../../Models/AggregatorMentor')} */
     AggregatorReader = use('App/Models/AggregatorReader'),
 
     /** @type {typeof import('../../Helpers/Uploader')} */

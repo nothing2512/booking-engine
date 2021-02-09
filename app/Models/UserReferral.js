@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
 
 /**
  * User Referral Model
@@ -26,8 +26,8 @@ class UserReferral extends Model {
             .replace(" ", "")
             .toUpperCase()
             .replace(/[^a-z]/gi, '')
-            .substr(0, 6)
-        const id = `${user.id}`
+            .substr(0, 6);
+        const id = `${user.id}`;
         return UserReferral.create({
             user_id: user.id,
             referral_code: `${name}${id}`
@@ -35,4 +35,4 @@ class UserReferral extends Model {
     }
 }
 
-module.exports = UserReferral
+module.exports = UserReferral;

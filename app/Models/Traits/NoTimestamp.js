@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 class NoTimestamp {
     register(Model) {
@@ -13,4 +13,4 @@ class NoTimestamp {
     }
 }
 
-module.exports = NoTimestamp
+module.exports = NoTimestamp;

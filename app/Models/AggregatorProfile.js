@@ -1,7 +1,10 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
+
+/** @type {typeof import('../Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /**
  * Aggregator Profile Model
@@ -10,6 +13,16 @@ const Model = use('Model')
  * @extends Model
  */
 class AggregatorProfile extends Model {
+
+    /**
+     * get table name
+     *
+     * @return {string}
+     */
+    static get table() {
+        return `${Engine.lower("aggregator")}_profiles`
+    }
+
 
     /**
      * User relationship
@@ -24,4 +37,4 @@ class AggregatorProfile extends Model {
 
 }
 
-module.exports = AggregatorProfile
+module.exports = AggregatorProfile;

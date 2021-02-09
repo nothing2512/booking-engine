@@ -43,7 +43,7 @@ const namedMiddleware = {
     guest: 'Adonis/Middleware/AllowGuestOnly',
     required: 'App/Middleware/RequireAuth',
     user: 'App/Middleware/RoleUser',
-    reader: 'App/Middleware/RoleReader',
+    mentor: 'App/Middleware/RoleMentor',
     aggregator: 'App/Middleware/RoleAggregator',
     writer: 'App/Middleware/RoleContentWriter',
     superadmin: 'App/Middleware/RoleSuperAdmin',

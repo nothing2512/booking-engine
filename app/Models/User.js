@@ -1,10 +1,13 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
+const Hash = use('Hash');
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = use('Model');
+
+/** @type {typeof import('../Helpers/Engine')} */
+const Engine = use('App/Helpers/Engine');
 
 /**
  * User Model
@@ -53,7 +56,7 @@ class User extends Model {
      * @static
      */
     static boot() {
-        super.boot()
+        super.boot();
 
         /**
          * A hook to hash the user password before saving
@@ -67,17 +70,23 @@ class User extends Model {
     }
 
     /**
-     * A relationship on tokens is required for auth to
-     * work. Since features like `refreshTokens` or
-     * `rememberToken` will be saved inside the
-     * tokens table.
+     * selecting average query
      *
-     * @method tokens
+     * @method select_average_query
+     * @static
      *
-     * @return {Object}
+     * @param user
      */
-    tokens() {
-        return this.hasMany('App/Models/UserToken')
+    static select_average_query(user) {
+        let mentor_aggre_relations;
+        if (user != null) mentor_aggre_relations = `SELECT ${Engine.id("mentor")} FROM ${Engine.lower("aggregator")}_${Engine.lower("mentor")}s WHERE ${Engine.id("aggregator")} = ${user.id}`;
+        else mentor_aggre_relations = `SELECT ${Engine.id("mentor")} FROM ${Engine.lower("aggregator")}_${Engine.lower("mentor")}s`;
+
+        const avg_price = `COALESCE((SELECT AVG(price) FROM consultations WHERE ${Engine.id("mentor")} = users.id), 0) as avg_price`;
+        const avg_paid = `COALESCE((SELECT AVG(price) FROM consultations WHERE user_id = users.id), 0) as avg_paid`;
+        const avg_income = `COALESCE((SELECT AVG(price) FROM consultations WHERE ${Engine.id("mentor")} IN (${mentor_aggre_relations})), 0) as avg_income`;
+
+        return `users.*, ${avg_price}, ${avg_paid}, ${avg_income}`
     }
 
     /**
@@ -143,7 +152,7 @@ class User extends Model {
      * @returns {HasMany}
      */
     schedules() {
-        return this.hasMany("App/Models/ReaderSchedule", 'id', 'reader_id')
+        return this.hasMany("App/Models/ReaderSchedule", 'id', Engine.id("mentor"))
     }
 
     /**
@@ -154,7 +163,7 @@ class User extends Model {
      * @returns {HasMany}
      */
     specialization() {
-        return this.hasMany("App/Models/ReaderSpecialization", 'id', 'reader_id')
+        return this.hasMany("App/Models/ReaderSpecialization", 'id', Engine.id("mentor"))
     }
 
     /**
@@ -168,26 +177,6 @@ class User extends Model {
         return this.hasMany('App/Models/Notification', 'id', 'user_id')
     }
 
-    /**
-     * selecting average query
-     *
-     * @method select_average_query
-     * @static
-     *
-     * @param user
-     */
-    static select_average_query(user) {
-        let reader_aggre_relations
-        if (user != null) reader_aggre_relations = `SELECT reader_id FROM aggregator_readers WHERE aggregator_id = ${user.id}`
-        else reader_aggre_relations = `SELECT reader_id FROM aggregator_readers`
-
-        const avg_price = "COALESCE((SELECT AVG(price) FROM consultations WHERE reader_id = users.id), 0) as avg_price"
-        const avg_paid = "COALESCE((SELECT AVG(price) FROM consultations WHERE user_id = users.id), 0) as avg_paid"
-        const avg_income = `COALESCE((SELECT AVG(price) FROM consultations WHERE reader_id IN (${reader_aggre_relations})), 0) as avg_income`
-
-        return `users.*, ${avg_price}, ${avg_paid}, ${avg_income}`
-    }
-
 }
 
-module.exports = User
+module.exports = User;

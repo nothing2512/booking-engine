@@ -1,15 +1,15 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class ReferalSchema extends Schema {
     up() {
         this.create('user_referrals', (table) => {
-            table.bigIncrements()
+            table.bigIncrements();
 
-            table.integer("user_id")
-            table.string("referral_code")
+            table.integer("user_id");
+            table.string("referral_code");
 
             table.timestamps()
         })
@@ -20,4 +20,4 @@ class ReferalSchema extends Schema {
     }
 }
 
-module.exports = ReferalSchema
+module.exports = ReferalSchema;

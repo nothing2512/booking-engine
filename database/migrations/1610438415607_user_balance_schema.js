@@ -1,15 +1,15 @@
-'use strict'
+'use strict';
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
-const Schema = use('Schema')
+const Schema = use('Schema');
 
 class UserBalanceSchema extends Schema {
     up() {
         this.create('user_balances', (table) => {
-            table.bigIncrements()
+            table.bigIncrements();
 
-            table.integer("user_id")
-            table.integer("balance")
+            table.integer("user_id");
+            table.integer("balance");
 
             table.timestamps()
         })
@@ -20,4 +20,4 @@ class UserBalanceSchema extends Schema {
     }
 }
 
-module.exports = UserBalanceSchema
+module.exports = UserBalanceSchema;

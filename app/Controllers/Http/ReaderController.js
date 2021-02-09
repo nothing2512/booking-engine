@@ -21,13 +21,13 @@ const UserAttachment = use('App/Models/UserAttachment')
 /** @type {typeof import('../../Models/UserProfile')} */
 const UserProfile = use('App/Models/UserProfile')
 
-/** @type {typeof import('../../Models/TarotCategory')} */
+/** @type {typeof import('../../Models/Category')} */
 const Category = use('App/Models/TarotCategory')
 
-/** @type {typeof import('../../Models/AggregatorReader')} */
+/** @type {typeof import('../../Models/AggregatorMentor')} */
 const AggregatorReader = use('App/Models/AggregatorReader')
 
-/** @type {typeof import('../../Models/ReaderSpecialization')} */
+/** @type {typeof import('../../Models/MentorSpecialization')} */
 const Specialization = use('App/Models/ReaderSpecialization')
 
 /**
