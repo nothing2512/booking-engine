@@ -39,7 +39,7 @@ class RoleSeeder {
             }
         ]);
 
-        await Role.create([
+        await Role.createMany([
             {
                 name: Engine.title("user"),
                 slug: Engine.lower("user"),
