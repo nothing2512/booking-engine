@@ -4,7 +4,7 @@
 const Schema = use('Schema');
 
 /** @type {import('App/Helpers/Engine')} */
-const Engine = use('Engine');
+const Engine = use('App/Helpers/Engine');
 
 class EngineJoinRequestSchema extends Schema {
     up() {
