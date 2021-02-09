@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 /**@type {typeof import('../../Models/Testimonial')} */
-const Testimonial = use('App/Models/Testimonial')
+const Testimonial = use('App/Models/Testimonial');
 
 /**@type {typeof import('../../Helpers/Uploader')} */
-const Uploader = use('App/Helpers/Uploader')
+const Uploader = use('App/Helpers/Uploader');
 
 /**
  * Testimonial Controller
@@ -24,7 +24,7 @@ class TestimonialController {
      * @returns {Promise<void|*>}
      */
     async index({request, response}) {
-        const page = request.input('page')
+        const page = request.input('page');
 
         return response.json(Object.assign({
             status: true,
@@ -43,15 +43,15 @@ class TestimonialController {
      * @returns {Promise<void|*>}
      */
     async store({request, response}) {
-        const payload = {}
+        const payload = {};
 
-        await Uploader.testimony(request, "picture", (url) => payload.picture_name = url)
+        await Uploader.testimony(request, "picture", (url) => payload.picture_name = url);
 
         request.multipart.field(async (name, value) => {
             if (["reviewer_name", "testi"].includes(name)) payload[name] = value
-        })
+        });
 
-        await request.multipart.process()
+        await request.multipart.process();
 
         return response.success(await Testimonial.create(payload))
     }
@@ -67,8 +67,8 @@ class TestimonialController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const testimonial = await Testimonial.find(params.id)
-        if (testimonial == null) return response.notFound("Testimonial")
+        const testimonial = await Testimonial.find(params.id);
+        if (testimonial == null) return response.notFound("Testimonial");
 
         return response.success(testimonial)
     }
@@ -86,17 +86,17 @@ class TestimonialController {
      * @returns {Promise<void|*>}
      */
     async update({auth, params, request, response}) {
-        const testimonial = await Testimonial.find(params.id)
-        if (testimonial == null) return response.notFound("Testimonial")
+        const testimonial = await Testimonial.find(params.id);
+        if (testimonial == null) return response.notFound("Testimonial");
 
-        await Uploader.testimony(request, "picture", (url) => testimonial.picture_name = url)
+        await Uploader.testimony(request, "picture", (url) => testimonial.picture_name = url);
 
         request.multipart.field(async (name, value) => {
             if (["reviewer_name", "testi"].includes(name)) testimonial[name] = value
-        })
+        });
 
-        await request.multipart.process()
-        await testimonial.save()
+        await request.multipart.process();
+        await testimonial.save();
 
         return response.success(testimonial)
     }
@@ -112,10 +112,10 @@ class TestimonialController {
      * @returns {Promise<void|*>}
      */
     async destroy({params, response}) {
-        await Testimonial.query().where('id', params.id).delete()
+        await Testimonial.query().where('id', params.id).delete();
         return response.success(null)
     }
 
 }
 
-module.exports = TestimonialController
+module.exports = TestimonialController;

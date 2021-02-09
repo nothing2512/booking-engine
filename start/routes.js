@@ -13,10 +13,10 @@
 |
 */
 
-/** @type {typeof import(`@adonisjs/framework/src/Route/Manager`)} */
+/** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use(`Route`);
 
-/**@type {typeof import(`App/Helpers/Engine`)} */
+/**@type {typeof import('App/Helpers/Engine')} */
 const Engine = use(`App/Helpers/Engine`);
 
 /**
@@ -83,7 +83,7 @@ Route.group(() => {
     resource(`/${(Engine.lower("book"))}/category`, `BookCategoryController`, [`aggregator`, `writer`, `required`]);
 
     /**
-     * Tarot Routes
+     * Book Routes
      */
     resource(`/${(Engine.lower("book"))}`, `BookController`, [`aggregator`, `writer`, `required`]);
 
@@ -109,8 +109,8 @@ Route.group(() => {
     Route.get(`/consultation/approve/:id`, `ConsultationController.approve`).middleware([`mentor`, `required`]);
     Route.get(`/consultation/reject/:id`, `ConsultationController.reject`).middleware([`mentor`, `required`]);
     Route.get(`/consultation/${(Engine.lower("mentor"))}s/replacement/:id`, `ConsultationController.findReplacement`).middleware([`user`, `required`]);
-    Route.post(`/consultation/${(Engine.lower("mentor"))}s/replace`, `ConsultationController.replaceReader`).middleware([`user`, `required`]);
-    Route.get(`/consultation/${(Engine.lower("mentor"))}s/booked`, `ConsultationController.bookedReader`).middleware([`user`, `required`]);
+    Route.post(`/consultation/${(Engine.lower("mentor"))}s/replace`, `ConsultationController.replaceMentor`).middleware([`user`, `required`]);
+    Route.get(`/consultation/${(Engine.lower("mentor"))}s/booked`, `ConsultationController.bookedMentor`).middleware([`user`, `required`]);
 
     /**
      * Cost Distribution Routes
@@ -186,7 +186,7 @@ Route.group(() => {
     /**
      * Readers Routes
      */
-    Route.put(`/${(Engine.lower("mentor"))}/specialization/:id`, `MentorController.editReaderSpecialization`).middleware([`mentor`, `aggregator`, `required`]);
+    Route.put(`/${(Engine.lower("mentor"))}/specialization/:id`, `MentorController.editSpecialization`).middleware([`mentor`, `aggregator`, `required`]);
     resource(`/reader/schedule`, `MentorScheduleController`, [`mentor`, `aggregator`]);
     Route.get(`/${(Engine.lower("mentor"))}s/schedules/available`, `MentorScheduleController.available`).middleware([`user`, `required`]);
     Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:reader_id`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);

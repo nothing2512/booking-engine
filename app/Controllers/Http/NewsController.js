@@ -1,16 +1,16 @@
-'use strict'
+'use strict';
 
 /**@type {typeof import('../../Models/News')} */
-const News = use('App/Models/News')
+const News = use('App/Models/News');
 
 /**@type {typeof import('../../Models/NewsCategory')} */
-const NewsCategory = use('App/Models/NewsCategory')
+const NewsCategory = use('App/Models/NewsCategory');
 
 /**@type {typeof import('../../Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /** @type {typeof import('../../Helpers/Uploader')} */
-const Uploader = use('App/Helpers/Uploader')
+const Uploader = use('App/Helpers/Uploader');
 
 /**
  * News Controller
@@ -29,7 +29,7 @@ class NewsController {
      * @returns {Promise<*>}
      */
     async detail(news) {
-        news.category = await NewsCategory.find(news.category_id)
+        news.category = await NewsCategory.find(news.category_id);
         return news
     }
 
@@ -44,22 +44,22 @@ class NewsController {
      * @returns {Promise<void|*>}
      */
     async index({request, response}) {
-        const page = request.input('page', 1)
-        const user_id = request.input("user_id")
-        const news = []
-        let newsQuery = News.query()
+        const page = request.input('page', 1);
+        const user_id = request.input("user_id");
+        const news = [];
+        let newsQuery = News.query();
 
         if (!isNaN(user_id)) newsQuery = newsQuery.where('user_id', user_id)
-            .where('author_type', request.input('type'))
+            .where('author_type', request.input('type'));
 
         const payloads = Object.assign({
             status: true,
             message: ""
-        }, await newsQuery.paginate(page))
+        }, await newsQuery.paginate(page));
 
-        for (let item of payloads.rows) news.push(await this.detail(item))
+        for (let item of payloads.rows) news.push(await this.detail(item));
 
-        payloads.rows = news
+        payloads.rows = news;
 
         return response.json(payloads)
     }
@@ -76,16 +76,16 @@ class NewsController {
      * @returns {Promise<void|*>}
      */
     async store({auth, request, response}) {
-        const user = await auth.getUser()
-        const payloads = request.only(["title", "content", "category_id"])
-        payloads.author_id = user.id
-        payloads.author_type = user instanceof User ? "user" : "admin"
-        payloads.header_image = await Uploader.news(request.file("image"))
+        const user = await auth.getUser();
+        const payloads = request.only(["title", "content", "category_id"]);
+        payloads.author_id = user.id;
+        payloads.author_type = user instanceof User ? "user" : "admin";
+        payloads.header_image = await Uploader.news(request.file("image"));
 
-        const category = await NewsCategory.find(payloads.category_id)
-        if (category == null) return response.notFound("Category")
+        const category = await NewsCategory.find(payloads.category_id);
+        if (category == null) return response.notFound("Category");
 
-        const news = await News.create(payloads)
+        const news = await News.create(payloads);
 
         return response.success(await this.detail(news))
     }
@@ -101,8 +101,8 @@ class NewsController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const news = await News.find(params.id)
-        if (news == null ) return response.notFound("News")
+        const news = await News.find(params.id);
+        if (news == null) return response.notFound("News");
         return response.success(await this.detail(news))
     }
 
@@ -119,26 +119,26 @@ class NewsController {
      * @returns {Promise<void|*>}
      */
     async update({auth, params, request, response}) {
-        const user = await auth.getUser()
-        const news = await News.find(params.id)
+        const user = await auth.getUser();
+        const news = await News.find(params.id);
         if (news == null) return response.json({
             status: false,
             message: "News not found",
             data: null
-        })
+        });
 
-        if (user instanceof User && (user.id != news.author_id || news.author_type != "user"))return response.forbidden()
-        else if (!(user instanceof User) && (user.id != news.author_id || news.author_type != "admin"))return response.forbidden()
+        if (user instanceof User && (user.id != news.author_id || news.author_type != "user")) return response.forbidden();
+        else if (!(user instanceof User) && (user.id != news.author_id || news.author_type != "admin")) return response.forbidden();
 
-        const payloads = request.only(["title", "content", "category_id"])
-        const header_image = await Uploader.news(request.file("image"))
-        if (header_image != null) news.header_image = header_image
+        const payloads = request.only(["title", "content", "category_id"]);
+        const header_image = await Uploader.news(request.file("image"));
+        if (header_image != null) news.header_image = header_image;
 
-        const category = await NewsCategory.find(payloads.category_id)
-        if (category == null) return response.notFound("Category")
+        const category = await NewsCategory.find(payloads.category_id);
+        if (category == null) return response.notFound("Category");
 
-        news.merge(payloads)
-        await news.save()
+        news.merge(payloads);
+        await news.save();
 
         return response.success(await this.detail(news))
     }
@@ -154,10 +154,10 @@ class NewsController {
      * @returns {Promise<void|*>}
      */
     async destroy({params, response}) {
-        await News.query().where('id', params.id).delete()
+        await News.query().where('id', params.id).delete();
         return response.success(null)
     }
 
 }
 
-module.exports = NewsController
+module.exports = NewsController;

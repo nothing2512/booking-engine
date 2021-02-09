@@ -9,7 +9,6 @@ class IntroSchema extends Schema {
             table.bigIncrements();
 
             table.integer('user_id');
-            table.integer('path');
             table.date('date_of_birth');
 
             table.timestamps()

@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /** @type {import('uuid')} */
-const uuid = use('uuid')
+const uuid = use('uuid');
 
 /**
  * Upload Helper
@@ -23,12 +23,12 @@ class Uploader {
      */
     static async upload(file, folder) {
         try {
-            const filename = `${uuid.v4()}.${file.subtype}`
-            const folderName = `attachments/${folder}`
+            const filename = `${uuid.v4()}.${file.subtype}`;
+            const folderName = `attachments/${folder}`;
             await file.move(`/var/www/files/public/attachments/${folder}`, {
                 name: filename,
                 overwrite: true
-            })
+            });
             return `https://files.bacatarot.xyz/${folderName}/${filename}`
         } catch (e) {
             return null
@@ -148,18 +148,32 @@ class Uploader {
     }
 
     /**
-     * upload tarot
+     * upload category
      *
-     * @method tarot
+     * @method category
      * @static
      * @async
      *
      * @param file
      * @returns {Promise<string|null>}
      */
-    static async tarot(file) {
-        return Uploader.upload(file, "tarot")
+    static async category(file) {
+        return Uploader.upload(file, "category")
+    }
+
+    /**
+     * upload book
+     *
+     * @method book
+     * @static
+     * @async
+     *
+     * @param file
+     * @returns {Promise<string|null>}
+     */
+    static async book(file) {
+        return Uploader.upload(file, "book")
     }
 }
 
-module.exports = Uploader
+module.exports = Uploader;

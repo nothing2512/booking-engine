@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 /**@type {typeof import('../../Models/Faq')} */
-const Faq = use('App/Models/Faq')
+const Faq = use('App/Models/Faq');
 
 /**@type {typeof import('../../Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /**
  * Faq Controller
@@ -24,7 +24,7 @@ class FaqController {
      * @returns {Promise<void|*>}
      */
     async index({request, response}) {
-        const page = request.input('page', 1)
+        const page = request.input('page', 1);
         return response.json(Object.assign({
             status: true,
             message: ""
@@ -43,10 +43,10 @@ class FaqController {
      * @returns {Promise<void|*>}
      */
     async store({auth, request, response}) {
-        const user = await auth.getUser()
-        if (user instanceof User) return response.forbidden()
+        const user = await auth.getUser();
+        if (user instanceof User) return response.forbidden();
 
-        const faq = await Faq.create(request.all())
+        const faq = await Faq.create(request.all());
         return response.success(faq)
     }
 
@@ -61,8 +61,8 @@ class FaqController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const faq = await Faq.find(params.id)
-        if (faq == null) return response.notFound("Faq")
+        const faq = await Faq.find(params.id);
+        if (faq == null) return response.notFound("Faq");
         return response.success(faq)
     }
 
@@ -79,14 +79,14 @@ class FaqController {
      * @returns {Promise<void|*>}
      */
     async update({auth, params, request, response}) {
-        const user = await auth.getUser()
-        if (user instanceof User) return response.forbidden()
+        const user = await auth.getUser();
+        if (user instanceof User) return response.forbidden();
 
-        const faq = await Faq.find(params.id)
-        if (faq == null) return response.notFound("Faq")
+        const faq = await Faq.find(params.id);
+        if (faq == null) return response.notFound("Faq");
 
-        faq.merge(request.all())
-        await faq.save()
+        faq.merge(request.all());
+        await faq.save();
 
         return response.success(faq)
     }
@@ -103,16 +103,16 @@ class FaqController {
      * @returns {Promise<void|*>}
      */
     async destroy({auth, params, response}) {
-        const user = await auth.getUser()
-        if (user instanceof User) return response.forbidden()
+        const user = await auth.getUser();
+        if (user instanceof User) return response.forbidden();
 
         await Faq.query()
             .where('id', params.id)
-            .delete()
+            .delete();
 
         return response.success(faq)
     }
 
 }
 
-module.exports = FaqController
+module.exports = FaqController;

@@ -1,37 +1,34 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('../../Models/User')} */
-const User = use('App/Models/User')
+const User = use('App/Models/User');
 
 /** @type {typeof import('../../Models/Admin')} */
-const Admin = use('App/Models/Admin')
+const Admin = use('App/Models/Admin');
 
 /** @type {typeof import('../../Models/RoleAdmin')} */
-const RoleAdmin = use('App/Models/RoleAdmin')
-
-/** @type {import('@adonisjs/auth/src/Exceptions')} */
-const {UserNotFoundException} = use('@adonisjs/auth/src/Exceptions')
+const RoleAdmin = use('App/Models/RoleAdmin');
 
 /**@type {typeof import('../../Models/Consultation')} */
-const Consultation = use('App/Models/Consultation')
+const Consultation = use('App/Models/Consultation');
 
 /**@type {typeof import('../../Models/Notification')} */
-const Notification = use('App/Models/Notification')
+const Notification = use('App/Models/Notification');
 
 /**@type {typeof import('../../Helpers/Fcm')} */
-const Fcm = use('App/Helpers/Fcm')
+const Fcm = use('App/Helpers/Fcm');
 
 /** @type {import('../../Helpers/Tokenizer')} */
-const Tokenizer = use('App/Helpers/Tokenizer')
+const Tokenizer = use('App/Helpers/Tokenizer');
 
 /** @type {import('../../Helpers/OAuth')} */
-const OAuth = use('App/Helpers/OAuth')
+const OAuth = use('App/Helpers/OAuth');
 
 /** @type {typeof import('../../Helpers/Confirmation')} */
-const Confirmation = use('App/Helpers/Confirmation')
+const Confirmation = use('App/Helpers/Confirmation');
 
 /** @type {import('@adonisjs/lucid/src/Database')} */
-const Database = use('Database')
+const Database = use('Database');
 
 /**
  * Auth Controller
@@ -52,22 +49,22 @@ class AuthController {
      * @returns {Promise<{data: null, message: string, status: boolean}|{data: *, message: string, status: boolean}>}
      */
     async userLoginProcess({auth, userPayload}, useSocial = false) {
-        const {username, email, password} = userPayload
+        const {username, email, password} = userPayload;
         let user = null;
 
-        if (email != undefined && email != "") user = await User.findBy('email', email)
-        else if (username != undefined && username != "") user = await User.findBy('username', username)
+        if (email != undefined && email != "") user = await User.findBy('email', email);
+        else if (username != undefined && username != "") user = await User.findBy('username', username);
         else return {
                 status: false,
                 message: "Username / Email not found",
                 data: null
-            }
+            };
 
         if (user == null) return {
             status: false,
             message: "User With Provided Username / Email Not Found",
             data: null
-        }
+        };
 
         let jwt = null;
 
@@ -89,21 +86,21 @@ class AuthController {
                 .generate(user)
         }
 
-        await user.loadMany(['profile', 'role'])
+        await user.loadMany(['profile', 'role']);
 
-        jwt.token = (await Tokenizer.create(user, jwt.token, "jwt")).token
-        jwt.user = user
+        jwt.token = (await Tokenizer.create(user, jwt.token, "jwt")).token;
+        jwt.user = user;
 
         if (user.role_id == 1) {
-            const date = new Date()
-            const now = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`
+            const date = new Date();
+            const now = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`;
             const query = Consultation.query()
                 .where('user_id', user.id)
                 .where(Database.raw(`date::date < '${now}'::date`))
-                .whereIn('status', [0, 1])
+                .whereIn('status', [0, 1]);
 
-            const consultation = await query.fetch()
-            await query.update({status: 3})
+            const consultation = await query.fetch();
+            await query.update({status: 3});
 
             if (user.fcm != null) for (let item of consultation.toJSON()) {
                 const notification = await Notification.create({
@@ -112,7 +109,7 @@ class AuthController {
                     parent_id: consultation.id,
                     title: "Consultation Expired",
                     message: "Jadwal konsultasi anda telah kadaluarsa"
-                })
+                });
                 await Fcm.send(user, notification, "notification")
             }
         }
@@ -136,23 +133,22 @@ class AuthController {
      * @returns {Promise<{data: null, message: string, status: boolean}|{data: *, message: string, status: boolean}>}
      */
     async adminLoginProcess({auth, adminPayload}, useSocial = false) {
-        const {username, email, password} = adminPayload
+        const {username, email, password} = adminPayload;
         let admin = null;
 
-        if (email != undefined && email != "") admin = await Admin.findBy('email', email)
-        else if (username != undefined && username != "") admin = await Admin.findBy('username', username)
-        else throw UserNotFoundException.invoke(`Cannot find user with username as ${username}`, 'username', 'password', 'jwt')
+        if (email != undefined && email != "") admin = await Admin.findBy('email', email);
+        else if (username != undefined && username != "") admin = await Admin.findBy('username', username);
 
         if (admin == null) return {
             status: false,
             message: "Admin With Provided Username / Email Not Found",
             data: null
-        }
+        };
 
-        admin.role = await RoleAdmin.find(admin.role_id)
+        admin.role = await RoleAdmin.find(admin.role_id);
 
         let jwt = null;
-        const authenticator = auth.authenticator('jwtAdmin')
+        const authenticator = auth.authenticator('jwtAdmin');
 
         if (!useSocial) {
             try {
@@ -172,8 +168,8 @@ class AuthController {
                 .generate(admin)
         }
 
-        jwt.token = (await Tokenizer.create(admin, jwt.token, "jwtAdmin")).token
-        jwt.user = admin
+        jwt.token = (await Tokenizer.create(admin, jwt.token, "jwtAdmin")).token;
+        jwt.user = admin;
 
         return {
             status: true,
@@ -195,8 +191,8 @@ class AuthController {
      */
     async login({auth, request, response}) {
 
-        const userPayload = request.only(["username", "email", "password"])
-        const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude'])
+        const userPayload = request.only(["username", "email", "password"]);
+        const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude']);
 
         return response.json(await this.userLoginProcess({
             auth: auth,
@@ -219,8 +215,8 @@ class AuthController {
      */
     async adminLogin({auth, request, response}) {
 
-        const adminPayload = request.only(["username", "email", "password"])
-        const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude'])
+        const adminPayload = request.only(["username", "email", "password"]);
+        const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude']);
 
         return response.json(await this.adminLoginProcess({
             auth: auth,
@@ -243,9 +239,9 @@ class AuthController {
      */
     async loginSocial({auth, request, response}) {
 
-        const oAuth = await OAuth.detail(request.input("access_token", ""), request.input("type"))
+        const oAuth = await OAuth.detail(request.input("access_token", ""), request.input("type"));
 
-        if (!oAuth.status) return response.json(oAuth)
+        if (!oAuth.status) return response.json(oAuth);
 
         return response.json(await this.userLoginProcess({
             auth: auth,
@@ -266,9 +262,9 @@ class AuthController {
      * @returns {Promise<void|*>}
      */
     async adminLoginSocial({auth, request, response}) {
-        const oAuth = await OAuth.detail(request.input("access_token", ""), request.input("type"))
+        const oAuth = await OAuth.detail(request.input("access_token", ""), request.input("type"));
 
-        if (!oAuth.status) return response.json(oAuth)
+        if (!oAuth.status) return response.json(oAuth);
 
         return response.json(await this.adminLoginProcess({
             auth: auth,
@@ -288,18 +284,17 @@ class AuthController {
      * @returns {Promise<void|*>}
      */
     async verify({auth, request, response}) {
-        const user = await auth.getUser()
-        await Confirmation.verify(request, user)
+        const user = await auth.getUser();
+        await Confirmation.verify(request, user);
 
-        let jwt
+        let jwt;
         if (user instanceof User) {
-            jwt = auth.authenticator("jwt")
+            jwt = auth.authenticator("jwt");
             await user.loadMany(['profile', 'role'])
-        }
-        else jwt = auth.authenticator("jwtAdmin")
+        } else jwt = auth.authenticator("jwtAdmin");
 
-        jwt.token = (await Tokenizer.create(user, jwt.token, "jwt")).token
-        jwt.user = user
+        jwt.token = (await Tokenizer.create(user, jwt.token, "jwt")).token;
+        jwt.user = user;
 
         return response.success(user)
     }
@@ -315,9 +310,9 @@ class AuthController {
      * @returns {Promise<void|*>}
      */
     async logout({request, response}) {
-        await Tokenizer.remove(request.headers().originalAuthorization.split(" ")[1])
+        await Tokenizer.remove(request.headers().originalAuthorization.split(" ")[1]);
         return response.success(null)
     }
 }
 
-module.exports = AuthController
+module.exports = AuthController;

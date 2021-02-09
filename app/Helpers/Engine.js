@@ -1,5 +1,6 @@
 'use strict';
 
+/** @type {import('@adonisjs/framework/src/Config')} */
 const Config = use('Config');
 
 /**

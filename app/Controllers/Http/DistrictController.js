@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('../../Models/District')} */
-const District = use('App/Models/District')
+const District = use('App/Models/District');
 
 /** @type {typeof import('../../Models/Province')} */
-const Province = use('App/Models/Province')
+const Province = use('App/Models/Province');
 
 /** @type {typeof import('../../Models/City')} */
-const City = use('App/Models/City')
+const City = use('App/Models/City');
 
 /**
  * District Controller
@@ -24,12 +24,12 @@ class DistrictController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const district = await District.find(params.id)
-        if (district == null) return response.notFound("District")
+        const district = await District.find(params.id);
+        if (district == null) return response.notFound("District");
 
-        const city = await district.city().fetch()
-        district.city = city
-        district.province = await Province.query().where('id', city.province_id).first()
+        const city = await district.city().fetch();
+        district.city = city;
+        district.province = await Province.query().where('id', city.province_id).first();
 
         return response.success(district)
     }
@@ -42,13 +42,13 @@ class DistrictController {
      * @returns {Promise<void|*>}
      */
     async store({request, response}) {
-        const city = await City.find(request.input('city_id'))
-        if (city == null) return response.notFound("City")
+        const city = await City.find(request.input('city_id'));
+        if (city == null) return response.notFound("City");
 
-        const district = await District.create(request.all())
+        const district = await District.create(request.all());
 
-        district.city = city
-        district.province = await Province.query().where('id', city.province_id).first()
+        district.city = city;
+        district.province = await Province.query().where('id', city.province_id).first();
 
         return response.success(district)
     }
@@ -62,15 +62,15 @@ class DistrictController {
      * @returns {Promise<void|*>}
      */
     async update({params, request, response}) {
-        const district = await District.find(params.id)
-        if (district == null) return response.notFound("District")
+        const district = await District.find(params.id);
+        if (district == null) return response.notFound("District");
 
-        district.merge(request.all())
-        await district.save()
+        district.merge(request.all());
+        await district.save();
 
-        const city = await district.city().fetch()
-        district.city = city
-        district.province = await Province.query().where('id', city.province_id).first()
+        const city = await district.city().fetch();
+        district.city = city;
+        district.province = await Province.query().where('id', city.province_id).first();
 
         return response.success(district)
     }
@@ -86,10 +86,10 @@ class DistrictController {
 
         await District.query()
             .where('id', params.id)
-            .delete()
+            .delete();
 
         return response.success(null)
     }
 }
 
-module.exports = DistrictController
+module.exports = DistrictController;

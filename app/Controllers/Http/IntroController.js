@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**@type {typeof import('../../Models/Intro')} */
 const Intro = use('App/Models/Intro');
@@ -25,19 +25,15 @@ class IntroController {
     async detail(intro) {
 
         const now = new Date();
-        const dob = new Date(intro.date_of_birth)
+        const dob = new Date(intro.date_of_birth);
         const age = new Date(now - dob);
 
-        intro.age = age.getUTCFullYear() - 1970
+        intro.age = age.getUTCFullYear() - 1970;
 
-        if (intro.path == 1) intro.path_name = "Baru pertama kali belajar"
-        else if (intro.path == 2) intro.path_name = "Baru pertama kali belajar"
-        else intro.path_name = "unknown"
+        const user = await User.find(intro.user_id);
+        user.profile = user.profile().fetch();
 
-        const user = await User.find(intro.user_id)
-        user.profile = user.profile().fetch()
-
-        intro.user = user
+        intro.user = user;
 
         return intro
     }
@@ -54,19 +50,19 @@ class IntroController {
      */
     async index({request, response}) {
 
-        const page = request.input('page', 1)
-        const result = []
+        const page = request.input('page', 1);
+        const result = [];
 
-        let intros = await Intro.query().paginate(page)
+        let intros = await Intro.query().paginate(page);
 
         intros = Object.assign({
             status: true,
             message: ""
-        }, intros)
+        }, intros);
 
-        for (let intro of intros.rows) result.push(await this.detail(intro))
+        for (let intro of intros.rows) result.push(await this.detail(intro));
 
-        intros.rows = result
+        intros.rows = result;
 
         return response.json(intros)
     }
@@ -83,15 +79,12 @@ class IntroController {
      * @returns {Promise<void|*>}
      */
     async store({auth, request, response}) {
-        const user = await auth.getUser()
+        const user = await auth.getUser();
 
         const intro = await Intro.create({
             user_id: user.id,
-            tarot_category_id: request.input('tarot_category_id'),
-            target: request.input('target'),
-            path: request.input('path'),
             date_of_birth: request.input('date_of_birth')
-        })
+        });
 
         return response.success(await this.detail(intro))
     }
@@ -108,11 +101,11 @@ class IntroController {
      * @returns {Promise<void|*>}
      */
     async show({auth, response, params}) {
-        const intro = await Intro.find(params.id)
-        if (intro == null) return response.notFound("Intro")
+        const intro = await Intro.find(params.id);
+        if (intro == null) return response.notFound("Intro");
 
-        const user = await auth.getUser()
-        if (user instanceof User && user.id != intro.user_id) return response.forbidden()
+        const user = await auth.getUser();
+        if (user instanceof User && user.id != intro.user_id) return response.forbidden();
 
         return response.success(await this.detail(intro))
     }
@@ -130,12 +123,12 @@ class IntroController {
      * @returns {Promise<void|*|{data: Promise<*>, message: string, status: boolean}>}
      */
     async update({auth, params, request, response}) {
-        const user = await auth.getUser()
+        const user = await auth.getUser();
 
         const intro = await Intro.find(params.id);
-        if (intro == null) return response.notFound("Intro")
+        if (intro == null) return response.notFound("Intro");
 
-        if (user instanceof User && user.id != intro.user_id) return response.forbidden()
+        if (user instanceof User && user.id != intro.user_id) return response.forbidden();
 
         intro.merge(request.all());
         await intro.save();
@@ -155,17 +148,17 @@ class IntroController {
      * @returns {Promise<void|*>}
      */
     async destroy({auth, params, response}) {
-        const user = await auth.getUser()
+        const user = await auth.getUser();
 
-        const intro = await Intro.find(params.id)
-        if (intro == null) return response.notFound("Intro")
+        const intro = await Intro.find(params.id);
+        if (intro == null) return response.notFound("Intro");
 
-        if (user instanceof User && user.id != intro.user_id) return response.forbidden()
+        if (user instanceof User && user.id != intro.user_id) return response.forbidden();
 
-        await intro.delete()
+        await intro.delete();
 
         return response.success(null)
     }
 }
 
-module.exports = IntroController
+module.exports = IntroController;

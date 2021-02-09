@@ -81,13 +81,13 @@ class Consultation extends Model {
     }
 
     /**
-     * Reader relationship
+     * Mentor relationship
      *
      * @method reader
      *
      * @returns {HasOne}
      */
-    reader() {
+    mentor() {
         return this.hasOne('App/Models/User', Engine.id("mentor"), 'id')
     }
 }

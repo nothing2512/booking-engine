@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 /** @type {typeof import('../../Models/City')} */
-const City = use('App/Models/City')
+const City = use('App/Models/City');
 
 /** @type {typeof import('../../Models/District')} */
-const District = use('App/Models/District')
+const District = use('App/Models/District');
 
 /** @type {typeof import('../../Models/Province')} */
-const Province = use('App/Models/Province')
+const Province = use('App/Models/Province');
 
 /**
  * City Controller
@@ -24,11 +24,11 @@ class CityController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const city = await City.find(params.id)
-        if (city == null) return response.notFound("City")
+        const city = await City.find(params.id);
+        if (city == null) return response.notFound("City");
 
-        city.districts = await city.districts().fetch()
-        city.province = await city.province().fetch()
+        city.districts = await city.districts().fetch();
+        city.province = await city.province().fetch();
 
         return response.success(city)
     }
@@ -41,13 +41,13 @@ class CityController {
      * @returns {Promise<void|*>}
      */
     async store({request, response}) {
-        const province = await Province.find(request.input('province_id'))
-        if (province == null) return response.notFound("Province")
+        const province = await Province.find(request.input('province_id'));
+        if (province == null) return response.notFound("Province");
 
-        const city = await City.create(request.all())
+        const city = await City.create(request.all());
 
-        city.province = province
-        city.districts = await city.districts().fetch()
+        city.province = province;
+        city.districts = await city.districts().fetch();
 
         return response.success(city)
     }
@@ -61,14 +61,14 @@ class CityController {
      * @returns {Promise<void|*>}
      */
     async update({params, request, response}) {
-        const city = await City.find(params.id)
-        if (city == null) return response.notFound("City")
+        const city = await City.find(params.id);
+        if (city == null) return response.notFound("City");
 
-        city.merge(request.all())
-        await city.save()
+        city.merge(request.all());
+        await city.save();
 
-        city.districts = await city.districts().fetch()
-        city.province = await city.province().fetch()
+        city.districts = await city.districts().fetch();
+        city.province = await city.province().fetch();
 
         return response.success(city)
     }
@@ -84,14 +84,14 @@ class CityController {
 
         await District.query()
             .where('city_id', params.id)
-            .delete()
+            .delete();
 
         await City.query()
             .where('id', params.id)
-            .delete()
+            .delete();
 
         return response.success(null)
     }
 }
 
-module.exports = CityController
+module.exports = CityController;

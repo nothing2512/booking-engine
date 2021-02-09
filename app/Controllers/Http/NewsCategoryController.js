@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 /**@type {typeof import('../../Models/NewsCategory')} */
-const NewsCategory = use('App/Models/NewsCategory')
+const NewsCategory = use('App/Models/NewsCategory');
 
 /**
  * News Category Controller
@@ -35,7 +35,7 @@ class NewsCategoryController {
      * @returns {Promise<*>}
      */
     async store({request, response}) {
-        const category = await NewsCategory.create(request.all())
+        const category = await NewsCategory.create(request.all());
         return response.success(category)
     }
 
@@ -50,8 +50,8 @@ class NewsCategoryController {
      * @returns {Promise<void|*>}
      */
     async show({params, response}) {
-        const category = await NewsCategory.find(params.id)
-        if (category == null) return response.notFound("News Category")
+        const category = await NewsCategory.find(params.id);
+        if (category == null) return response.notFound("News Category");
         return response.success(category)
     }
 
@@ -67,11 +67,11 @@ class NewsCategoryController {
      * @returns {Promise<void|*>}
      */
     async update({params, request, response}) {
-        const category = await NewsCategory.find(params.id)
-        if (category == null) return response.notFound("News Category")
+        const category = await NewsCategory.find(params.id);
+        if (category == null) return response.notFound("News Category");
 
-        category.merge(request.all())
-        await category.save()
+        category.merge(request.all());
+        await category.save();
 
         return response.success(category)
     }
@@ -87,10 +87,10 @@ class NewsCategoryController {
      * @returns {Promise<void|*>}
      */
     async destroy({params, response}) {
-        await NewsCategory.query().where('id', params.id).delete()
+        await NewsCategory.query().where('id', params.id).delete();
         return response.success(null)
     }
 
 }
 
-module.exports = NewsCategoryController
+module.exports = NewsCategoryController;

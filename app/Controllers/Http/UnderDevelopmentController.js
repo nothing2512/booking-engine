@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Under Development Controller
@@ -73,4 +73,4 @@ class UnderDevelopmentController {
     }
 }
 
-module.exports = UnderDevelopmentController
+module.exports = UnderDevelopmentController;

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const
     /**@type {typeof import('../../Models/ConsultationNote')} */
@@ -14,7 +14,7 @@ const
     Balance = use('App/Models/UserBalance'),
 
     /**@type {typeof import('../../Models/AppProfile')} */
-    BacatarotProfile = use('App/Models/BacatarotProfile'),
+    AppProfile = use('App/Models/AppProfile'),
 
     /**@type {typeof import('../../Models/User')} */
     User = use('App/Models/User'),
@@ -25,8 +25,11 @@ const
     /** @type {typeof import('../../Helpers/Fcm')} */
     Fcm = use('App/Helpers/Fcm'),
 
+    /** @type {typeof import('../../Helpers/Engine')} */
+    Engine = use('App/Helpers/Engine'),
+
     /**@type {typeof import('../../Models/AggregatorMentor')} */
-    AggregatorReader = use('App/Models/AggregatorReader'),
+    AggregatorMentor = use('App/Models/AggregatorMentor'),
 
     /**@type {typeof import('../../Models/UserProfile')} */
     UserProfile = use('App/Models/UserProfile'),
@@ -38,7 +41,7 @@ const
     AggregatorProfile = use('App/Models/AggregatorProfile'),
 
     /**@type {typeof import(@adonisjs/lucid/src/Database')} */
-    Database = use('Database')
+    Database = use('Database');
 
 /**
  * Consultation Note Controller
@@ -59,21 +62,21 @@ class ConsultationNoteController {
      */
     async detail(note, consultation) {
 
-        const reader = await User.find(consultation.reader_id)
+        const mentor = await User.find(consultation[Engine.id("mentor")]);
 
-        delete reader.fcm
-        reader.attachment = await UserAttachment.findBy('user_id', reader.id)
+        delete mentor.fcm;
+        mentor.attachment = await UserAttachment.findBy('user_id', mentor.id);
 
-        let subquery = Database.from('aggregator_readers')
-            .where('reader_id', reader.id)
-            .select('aggregator_id')
-        reader.aggregatorProfile = await AggregatorProfile.findBy('user_id', subquery)
+        let subquery = Database.from(`${Engine.lower("aggregator")}_${Engine.lower("mentor")}s`)
+            .where(Engine.id("mentor"), mentor.id)
+            .select(Engine.id("aggregator"));
+        mentor[`${Engine.lower("aggregator")}Profile`] = await AggregatorProfile.findBy('user_id', subquery);
 
-        const user = await User.find(consultation.user_id)
-        user.profile = await UserProfile.find(user.id)
+        const user = await User.find(consultation.user_id);
+        user.profile = await UserProfile.find(user.id);
 
-        note.reader = reader
-        note.user = user
+        note[Engine.lower("mentor")] = mentor;
+        note.user = user;
 
         return note
     }
@@ -90,37 +93,38 @@ class ConsultationNoteController {
      * @returns {Promise<void|*>}
      */
     async index({auth, request, response}) {
-        const user = await auth.getUser()
+        const user = await auth.getUser();
 
-        let {reader_id, user_id} = request.get();
-        let page = request.input('page', 1)
+        let user_id = request.input("user_id");
+        let mentor_id = request.input(Engine.id("mentor"));
+        let page = request.input('page', 1);
 
-        let consultations = Consultation.query()
+        let consultations = Consultation.query();
 
         if (user instanceof User) {
-            if (user.role_id === 2) consultations = consultations.where('reader_id', user.id)
+            if (user.role_id === 2) consultations = consultations.where(Engine.id("mentor"), user.id);
             if (user.role_id === 1) consultations = consultations.where('user_id', user.id)
         } else {
-            if (!isNaN(user_id)) consultations = consultations.where('user_id', user_id)
-            if (!isNaN(reader_id)) consultations = consultations.where('reader_id', reader_id)
+            if (!isNaN(user_id)) consultations = consultations.where('user_id', user_id);
+            if (!isNaN(mentor_id)) consultations = consultations.where(Engine.id("mentor"), mentor_id)
         }
 
-        const ids = []
+        const ids = [];
 
-        for (let item of (await consultations.fetch()).toJSON()) ids.push(item.id)
+        for (let item of (await consultations.fetch()).toJSON()) ids.push(item.id);
 
-        const result = []
+        const result = [];
         const notes = Object.assign({
             status: true,
             message: ""
-        }, await Note.query().whereIn('consultation_id', ids).paginate(page))
+        }, await Note.query().whereIn('consultation_id', ids).paginate(page));
 
         for (let note of notes.rows) {
-            let consultation = await Consultation.find(note.consultation_id)
+            let consultation = await Consultation.find(note.consultation_id);
             result.push(await this.detail(note, consultation))
         }
 
-        notes.rows = result
+        notes.rows = result;
 
         return response.json(notes)
     }
@@ -137,63 +141,60 @@ class ConsultationNoteController {
      * @returns {Promise<void|*>}
      */
     async store({auth, request, response}) {
-        const params = request.all()
-        const reader = await auth.getUser()
-        let isReaders = false
+        const params = request.all();
+        const mentor = await auth.getUser();
+        let isMentor = false;
 
-        if (reader instanceof User && reader.role_id == 2) isReaders = true
+        if (mentor instanceof User && mentor.role_id == 2) isMentor = true;
 
-        if (!isReaders) return response.forbidden()
+        if (!isMentor) return response.forbidden();
 
-        const consultation = await Consultation.find(params.consultation_id)
-        if (consultation == null) return response.notFound("Consultation")
+        const consultation = await Consultation.find(params.consultation_id);
+        if (consultation == null) return response.notFound("Consultation");
 
-        let note = await consultation.note().fetch()
+        let note = await consultation.note().fetch();
         if (note == null) note = await Note.create(params);
         else {
-            note.merge(params)
+            note.merge(params);
             await note.save()
         }
 
-        note = await this.detail(note, consultation)
+        note = await this.detail(note, consultation);
 
-        const user = await User.find(consultation.user_id)
+        const user = await User.find(consultation.user_id);
         const notification = await Notification.create({
             user_id: user.id,
             type: 1,
             parent_id: consultation.id,
             title: "Your Consultation Has Been Done",
             message: "Konsultasi anda telah selesai, periksa notes untuk detailnya..."
-        })
+        });
 
-        await Fcm.send(user, notification, "notification")
+        await Fcm.send(user, notification, "notification");
 
-        const aggregator = await AggregatorReader.findBy("reader_id", consultation.reader_id)
-        const cost = await Cost.findBy('aggregator_id', aggregator.aggregator_id)
+        const aggregator = await AggregatorMentor.findBy(Engine.id("mentor"), consultation[Engine.id("mentor")]);
+        const cost = await Cost.findBy(Engine.id("aggregator"), aggregator[Engine.id("aggregator")]);
 
-        const price = consultation.price / 100
-        const clientPrice = (price * (100 - cost.bacatarot)) / 100
-        const bacatarotPrice = price * cost.bacatarot
-        const aggregatorPrice = clientPrice * cost.aggregator
-        const readerPrice = clientPrice * cost.reader
+        const price = consultation.price / 100;
+        const clientPrice = (price * (100 - cost[Engine.lower("app")])) / 100;
+        const appPrice = price * cost[Engine.lower("app")];
+        const aggregatorPrice = clientPrice * cost[Engine.lower("aggregator")];
+        const mentorPrice = clientPrice * cost[Engine.lower("mentor")];
 
-        const readerBalance = await Balance.findBy("user_id", consultation.reader_id)
-        readerBalance.balance += readerPrice
-        await readerBalance.save()
+        const mentorBalance = await Balance.findBy("user_id", consultation[Engine.id("mentor")]);
+        mentorBalance.balance += mentorPrice;
+        await mentorBalance.save();
 
-        const aggregatorBalance = await Balance.findBy("user_id", aggregator.aggregator_id)
-        aggregatorBalance.balance += aggregatorPrice
-        await aggregatorBalance.save()
+        const aggregatorBalance = await Balance.findBy("user_id", aggregator[Engine.id("aggregator")]);
+        aggregatorBalance.balance += aggregatorPrice;
+        await aggregatorBalance.save();
 
-        const bacatarotProfile = await BacatarotProfile.first()
-        bacatarotProfile.balance += bacatarotPrice
-        await bacatarotProfile.save()
+        const appProfile = await AppProfile.first();
+        appProfile.balance += appPrice;
+        await appProfile.save();
 
-        /**
-         * add bacatarot, aggregator, and reader balance
-         */
-        consultation.merge({status: 2})
-        await consultation.save()
+        consultation.merge({status: 2});
+        await consultation.save();
 
         return response.success(note)
     }
@@ -211,11 +212,11 @@ class ConsultationNoteController {
      */
     async is_accessible(note, user, consultation) {
         if (user instanceof User) {
-            let isAccessible = user.id == consultation.reader_id || user.id == consultation.user_id
-            if (user.role_id == 3) isAccessible = (await AggregatorReader.query()
-                .where('reader_id', consultation.reader_id)
-                .where('aggregator_id', user.id)
-                .getCount()) > 0
+            let isAccessible = user.id == consultation[Engine.id("mentor")] || user.id == consultation.user_id;
+            if (user.role_id == 3) isAccessible = (await AggregatorMentor.query()
+                .where(Engine.id("mentor"), consultation[Engine.id("mentor")])
+                .where(Engine.id("aggregator"), user.id)
+                .getCount()) > 0;
 
             return isAccessible
         }
@@ -234,12 +235,12 @@ class ConsultationNoteController {
      * @returns {Promise<void|*>}
      */
     async show({auth, response, params}) {
-        const user = await auth.getUser()
-        let note = await Note.find(params.id)
-        if (note == null) return response.notFound("Consultation Note")
+        const user = await auth.getUser();
+        let note = await Note.find(params.id);
+        if (note == null) return response.notFound("Consultation Note");
 
-        const consultation = await Consultation.find(note.consultation_id)
-        if (!this.is_accessible(note, user, consultation)) return response.forbidden()
+        const consultation = await Consultation.find(note.consultation_id);
+        if (!this.is_accessible(note, user, consultation)) return response.forbidden();
         note = await this.detail(note, consultation);
 
         return response.success(note)
@@ -258,19 +259,19 @@ class ConsultationNoteController {
      * @returns {Promise<void|*|{data: *, message: string, status: boolean}>}
      */
     async update({auth, params, request, response}) {
-        const user = await auth.getUser()
-        let note = await Note.find(params.id)
-        const obj = request.all()
+        const user = await auth.getUser();
+        let note = await Note.find(params.id);
+        const obj = request.all();
 
-        if (note == null) return response.notFound("Consultation Note")
+        if (note == null) return response.notFound("Consultation Note");
 
-        const consultation = await Consultation.find(note.consultation_id)
-        if (!this.is_accessible(note, user, consultation)) return response.forbidden()
+        const consultation = await Consultation.find(note.consultation_id);
+        if (!this.is_accessible(note, user, consultation)) return response.forbidden();
 
         note.merge(obj);
         await note.save();
 
-        note = await this.detail(note, consultation)
+        note = await this.detail(note, consultation);
 
         return response.success(note)
     }
@@ -287,18 +288,18 @@ class ConsultationNoteController {
      * @returns {Promise<void|*>}
      */
     async destroy({auth, params, response}) {
-        const user = await auth.getUser()
-        const note = await Note.find(params.id)
+        const user = await auth.getUser();
+        const note = await Note.find(params.id);
 
-        if (note == null) return response.notFound("Consultation Note")
+        if (note == null) return response.notFound("Consultation Note");
 
-        const consultation = await Consultation.find(note.consultation_id)
-        if (!this.is_accessible(note, user, consultation)) return response.forbidden()
+        const consultation = await Consultation.find(note.consultation_id);
+        if (!this.is_accessible(note, user, consultation)) return response.forbidden();
 
-        await note.delete()
+        await note.delete();
 
         return response.success(null)
     }
 }
 
-module.exports = ConsultationNoteController
+module.exports = ConsultationNoteController;
