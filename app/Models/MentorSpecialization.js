@@ -7,7 +7,7 @@ const Model = use('Model')
 const Engine = use('App/Helpers/Engine');
 
 /**
- * Reader Specialization Model
+ * Mentor Specialization Model
  *
  * @class MentorSpecialization
  * @extends Model

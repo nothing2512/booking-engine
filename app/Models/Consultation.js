@@ -83,7 +83,7 @@ class Consultation extends Model {
     /**
      * Mentor relationship
      *
-     * @method reader
+     * @method mentor
      *
      * @returns {HasOne}
      */

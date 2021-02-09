@@ -7,7 +7,7 @@ const Model = use('Model');
 const Engine = use('App/Helpers/Engine');
 
 /**
- * Aggregator Reader Model
+ * Aggregator Mentor Model
  * @class AggregatorMentor
  * @extends Model
  */

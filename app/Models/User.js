@@ -152,7 +152,7 @@ class User extends Model {
      * @returns {HasMany}
      */
     schedules() {
-        return this.hasMany("App/Models/ReaderSchedule", 'id', Engine.id("mentor"))
+        return this.hasMany("App/Models/MentorSchedule", 'id', Engine.id("mentor"))
     }
 
     /**
@@ -163,7 +163,7 @@ class User extends Model {
      * @returns {HasMany}
      */
     specialization() {
-        return this.hasMany("App/Models/ReaderSpecialization", 'id', Engine.id("mentor"))
+        return this.hasMany("App/Models/MentorSpecialization", 'id', Engine.id("mentor"))
     }
 
     /**

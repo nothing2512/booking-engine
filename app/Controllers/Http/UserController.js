@@ -78,11 +78,12 @@ class UserController {
      * @returns {Promise<{data: null, message: string, status: boolean}|{data: *, message: string, status: boolean}>}
      */
     async register_user(params, isRequest = false) {
+        const auth = params.auth
         if (params.userPayload.status == null) params.userPayload.status = 'inactive';
         params.userPayload.is_approved = !(params.userPayload.role_id == 3 && isRequest);
         const totalAccount = await User.query()
-            .where('email', userPayload.email)
-            .orWhere('username', userPayload.username)
+            .where('email', params.userPayload.email)
+            .orWhere('username', params.userPayload.username)
             .getCount();
 
         if (totalAccount > 0) return {
@@ -94,13 +95,13 @@ class UserController {
         if (params[Engine.id("aggregator")] != null && params.userPayload.role_id == 2 && params.aggregator == null) {
             params.aggregator = await User.find(params[Engine.id("aggregator")]);
 
-            if (aggregator == null || aggregator.role_id != 3) return {
+            if (params.aggregator == null || params.aggregator.role_id != 3) return {
                 status: false,
                 message: `${Engine.title("aggregator")} Not Found`,
                 data: null
             };
 
-            if (!aggregator.is_approved) return {
+            if (!params.aggregator.is_approved) return {
                 status: false,
                 message: `${Engine.title("aggregator")} has been not verified by admin`,
                 data: null
@@ -140,12 +141,12 @@ class UserController {
          * - insert profile
          * - insert schedules
          * - insert attachment
-         * - insert aggregator_reader
+         * - insert aggregator_mentor
          */
         if (user.role_id == 2) {
 
-            user.profile().create(profilePayload);
-            await user.attachment().create(attachmentPayload);
+            user.profile().create(params.profilePayload);
+            await user.attachment().create(params.attachmentPayload);
 
             const schedulePayloads = [];
             for (let i = 1; i <= 7; i++) {
@@ -158,7 +159,7 @@ class UserController {
             await user.schedules().createMany(schedulePayloads);
 
             const specializationPayloads = [];
-            for (let id of categoryIds) {
+            for (let id of params.categoryIds) {
                 if (await Category.find(id) == null) return {
                     status: false,
                     message: "Category not found",
@@ -170,7 +171,7 @@ class UserController {
 
             if (params[Engine.id("aggregator")] != null) {
                 const aggreMentorPayload = {};
-                aggreMentorPayload[Engine.id("reader")] = user.id;
+                aggreMentorPayload[Engine.id("mentor")] = user.id;
                 aggreMentorPayload[Engine.id("aggregator")] = params[Engine.id("aggregator")];
                 await Database
                     .insert(aggreMentorPayload)
@@ -186,7 +187,7 @@ class UserController {
                 const mentor_notification = await Notification.create({
                     user_id: user.id,
                     type: 3,
-                    parent_id: readerRequest.id,
+                    parent_id: mentorRequest.id,
                     title: "Submission was send",
                     message: "Data anda sedang di review oleh tim"
                 });
@@ -219,7 +220,7 @@ class UserController {
             await Cost.create(costPayload)
         }
 
-        let jwt = await auth.withRefreshToken().attempt(user.email, userPayload.password);
+        let jwt = await auth.attempt(user.email, params.userPayload.password);
         await Confirmation.send(jwt, user);
 
         return {
