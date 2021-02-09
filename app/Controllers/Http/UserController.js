@@ -33,6 +33,9 @@ const Cost = use('App/Models/CostDistribution');
 /** @type {typeof import('../../Models/UserBalance')} */
 const Balance = use('App/Models/UserBalance');
 
+/** @type {typeof import('../../Helpers/Tokenizer')} */
+const Tokenizer = use('App/Helpers/Tokenizer');
+
 /** @type {typeof import('../../Helpers/Engine')} */
 const Engine = use('App/Helpers/Engine');
 
