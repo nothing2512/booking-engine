@@ -78,7 +78,7 @@ class Fcm {
      * @returns {Promise<boolean>}
      */
     static async send(user, data, type) {
-        await SocketUtil.send(user, type, data)
+        await SocketUtil.send(user, type, data);
         return await (new Fcm()).send(user, data, type)
     }
 
