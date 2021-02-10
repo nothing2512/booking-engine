@@ -77,7 +77,7 @@ class Consultation extends Model {
      * @returns {HasOne}
      */
     category() {
-        return this.hasOne('App/Models/BookCategory', "category_id", 'id')
+        return this.hasOne('App/Models/Category', "category_id", 'id')
     }
 
     /**
