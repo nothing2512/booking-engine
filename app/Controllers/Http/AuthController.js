@@ -70,9 +70,7 @@ class AuthController {
 
         if (!useSocial) {
             try {
-                jwt = await auth
-                    .withRefreshToken()
-                    .attempt(user.email, password)
+                jwt = await auth.attempt(user.email, password)
             } catch (e) {
                 return {
                     status: false,
@@ -81,9 +79,7 @@ class AuthController {
                 }
             }
         } else {
-            jwt = await auth
-                .withRefreshToken()
-                .generate(user)
+            jwt = await auth.generate(user)
         }
 
         await user.loadMany(['profile', 'role']);
@@ -152,9 +148,7 @@ class AuthController {
 
         if (!useSocial) {
             try {
-                jwt = await authenticator
-                    .withRefreshToken()
-                    .attempt(admin.email, password)
+                jwt = await authenticator.attempt(admin.email, password)
             } catch (e) {
                 return {
                     status: false,
@@ -163,9 +157,7 @@ class AuthController {
                 }
             }
         } else {
-            jwt = await authenticator
-                .withRefreshToken()
-                .generate(admin)
+            jwt = await authenticator.generate(admin)
         }
 
         jwt.token = (await Tokenizer.create(admin, jwt.token, "jwtAdmin")).token;
