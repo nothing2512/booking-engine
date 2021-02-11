@@ -81,7 +81,7 @@ class NotificationController {
             }
 
             notification.consultation = consultation;
-            notification[Engine.lower("mentor")] = Engine.lower("mentor");
+            notification[Engine.lower("mentor")] = mentor
             notification.user = cuser
         }
 
