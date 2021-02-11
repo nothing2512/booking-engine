@@ -42,7 +42,7 @@ class Confirmation {
         }, (message) => {
             message.to("blank345red@gmail.com")
                 .from('ezy.bacatarot@gmail.com')
-                .subject('Bacatarot Registration Confirmation')
+                .subject(`${Engine.title("app")} Registration Confirmation`)
         })
     }
 
@@ -67,7 +67,7 @@ class Confirmation {
         const loginToken = await Tokenizer.create(user, jwt.token, authenticator);
         const token = encodeURI(loginToken.token);
 
-        let verification_link = `https://bacatarot.xyz/auth/verification/tk#${token}`;
+        let verification_link = `${Engine.lower("verification_link")}${token}`;
 
         try {
             await Mail.send('email_confirmation', {
@@ -75,7 +75,7 @@ class Confirmation {
             }, (message) => {
                 message.to(user.email)
                     .from('ezy.bacatarot@gmail.com')
-                    .subject('Ngajilagi Registration Confirmation')
+                    .subject(`${Engine.title("app")} Registration Confirmation`)
             })
         } catch (e) {
 

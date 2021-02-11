@@ -9,6 +9,7 @@ module.exports = {
     mentor: "Mentor",
     aggregator: "Aggregator",
     book: "Book",
+    verification_link: "http://localhost/verification/?token=",
     midtrans: {
         is_production: Env.get("MIDTRANS_IS_PRODUCTION"),
         production_key: Env.get("MIDTRANS_PRODUCTION_KEY"),
