@@ -354,7 +354,7 @@ class UserController {
                 users.data[i].avg_income = Math.round(users.data[i].avg_income);
                 users.data[i].avg_price = 0;
                 users.data[i].avg_paid = 0;
-                users.data[i][`${Engine.lower("aggregator")}Profile`] = await AggregatorProfile.find(users.data[i].id)
+                users.data[i][`${Engine.lower("aggregator")}Profile`] = await AggregatorProfile.findBy("user_id", users.data[i].id)
             }
         }
 
