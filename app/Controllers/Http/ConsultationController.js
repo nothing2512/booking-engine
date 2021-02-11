@@ -206,7 +206,7 @@ class ConsultationController {
     async indexByDate({auth, request, response}) {
         const user = await auth.getUser();
         let {date, user_id, status, approval_status} = request.get();
-        let mentor_id = request.get(Engine.id("mentor"));
+        let mentor_id = request.input(Engine.id("mentor"));
         let page = request.input('page', 1);
         let consultation = Consultation.query();
         let aggregator_id = null;
@@ -261,7 +261,7 @@ class ConsultationController {
     async index({auth, request, response}) {
         const user = await auth.getUser();
         let {date, user_id} = request.get();
-        let mentor_id = request.get(Engine.id("mentor"));
+        let mentor_id = request.input(Engine.id("mentor"));
         let consultation = Consultation.query();
         let page = request.input('page', 1);
         let aggregator_id = null;
@@ -311,7 +311,7 @@ class ConsultationController {
     async store({auth, request, response}) {
 
         const params = request.only(["user_id", "date", "time", "price", "voucher_code", "category_id"]);
-        params[Engine.id("mentor")] = request.get(Engine.id("mentor"));
+        params[Engine.id("mentor")] = request.input(Engine.id("mentor"));
         const user = await auth.getUser();
         let voucherPayload = {};
 
