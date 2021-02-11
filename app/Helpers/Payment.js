@@ -19,7 +19,7 @@ class Payment {
      */
     constructor() {
         const is_production = Engine.get('midtrans.is_production');
-        const serverKey = is_production ? Engine.get("midtrans.production_key") : Engine.get("midtrans.sandbox_key");
+        const serverKey = is_production === "true" ? Engine.get("midtrans.production_key") : Engine.get("midtrans.sandbox_key");
         this.baseUrl = is_production === "true" ? Engine.get("midtrans.url") : Engine.get("midtrans.sandbox_url");
         this.headers = {
             "Content-Type": "Application/Json",
@@ -345,7 +345,6 @@ class Payment {
         method = this.method;
 
         let payment_type;
-        let bank = "";
 
         switch (this.method) {
             case this.MANDIRI_BILL:
@@ -383,7 +382,7 @@ class Payment {
         let data = {
             payment_type: payment_type,
             transaction_details: {
-                order_id: "Bacatarot-" + consultation_id.toString(),
+                order_id: `${Engine.title("app")}-${consultation_id}`,
                 gross_amount: price
             }
         };
@@ -393,18 +392,18 @@ class Payment {
         if (method === this.BRI) data['bank_transfer'] = {bank: "bca"};
 
         if (method === this.MANDIRI_BILL) data['echannel'] = {
-            bill_info1: "purchase bacatarot\nProduct: " + product,
+            bill_info1: `purchase ${Engine.lower("app")}\nProduct: ${product}`,
             bill_info2: "debt"
         };
-        if (method === this.BCA_KLIKPAY) data['bca_klikpay'] = {description: "purchase bacatarot\nProduct: " + product};
-        if (method === this.CIMB_CLICKS) data['cimb_clicks'] = {description: "purchase bacatarot\nProduct: " + product};
+        if (method === this.BCA_KLIKPAY) data['bca_klikpay'] = {description: `purchase ${Engine.lower("app")}\nProduct: ${product}`};
+        if (method === this.CIMB_CLICKS) data['cimb_clicks'] = {description: `purchase ${Engine.lower("app")}\nProduct: ${product}`};
         if (method === this.INDOMARET) data['cstore'] = {
             store: "indomaret",
-            message: "purchase bacatarot\nProduct: " + product
+            message: `purchase ${Engine.lower("app")}\nProduct: ${product}`
         };
         if (method === this.ALFAMARET) data['cstore'] = {
             store: "alfamart",
-            message: "purchase bacatarot\nProduct: " + product
+            message: `purchase ${Engine.lower("app")}\nProduct: ${product}`
         };
 
         try {
