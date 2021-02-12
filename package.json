@@ -1,5 +1,5 @@
 {
-  "name": "Booking Engine",
+  "name": "booking-engine",
   "version": "0.5.0",
   "adonis-version": "4.1.0",
   "description": "Booking Engine API",
@@ -9,7 +9,7 @@
     "test": "node ace test"
   },
   "keywords": [
-    "ngajilagi"
+    "Booking Engine"
   ],
   "engines": {
     "node": "12.18.4"
