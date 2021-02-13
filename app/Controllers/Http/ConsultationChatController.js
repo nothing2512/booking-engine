@@ -10,9 +10,6 @@ const
     /**@type {typeof import('../../Helpers/Fcm')} */
     Fcm = use('App/Helpers/Fcm'),
 
-    /**@type {typeof import('../../Helpers/SocketUtil')} */
-    SocketUtil = use('App/Helpers/SocketUtil'),
-
     /**@type {typeof import('../../Helpers/Uploader')} */
     Uploader = use('App/Helpers/Uploader'),
 
@@ -26,6 +23,15 @@ const
     AggregatorMentor = use('App/Models/AggregatorMentor');
 
 class ConsultationChatController {
+
+    async test({params, response}) {
+        console.log(params.fcm)
+        const chat = await ConsultationChat.first()
+		chat.text = "Hai ivan?"
+        const fcm = await Fcm.test(params.fcm, chat, "notification")
+        console.log(fcm)
+        return response.json(fcm.data)
+    }
 
     /**
      * get consultation detail
@@ -44,7 +50,7 @@ class ConsultationChatController {
         consultation[Engine.lower("mentor")] = mentor;
         consultation.user = user;
 
-        consultation.chats = await consultation.chats().orderBy('created_at', 'asc').fetch();
+        consultation.chats = await consultation.chats().orderBy('id', 'asc').fetch();
 
         return consultation
     }

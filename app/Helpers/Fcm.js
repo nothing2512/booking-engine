@@ -78,7 +78,7 @@ class Fcm {
      * @returns {Promise<boolean>}
      */
     static async send(user, data, type) {
-        await SocketUtil.send(user, type, data);
+        await SocketUtil.send(user, type, data)
         return await (new Fcm()).send(user, data, type)
     }
 
@@ -106,7 +106,7 @@ class Fcm {
             .fetch()).toJSON();
 
         for (let token of loginToken) {
-            if (loginToken.fcm != "") fcm.push(loginToken.fcm)
+            if (token.fcm != "") fcm.push(token.fcm)
         }
 
         if (fcm.length != 0) {
