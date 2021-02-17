@@ -79,17 +79,24 @@ class MentorScheduleController {
      * @returns {Promise<void|*>}
      */
     async timeAvailable({params, request, response}) {
-        const date = request.input("date");
-        const day = new Date(date).getDay() + 1;
+        const date = new Date(request.input("date"));
+        const now = new Date()
+        const day = date.getDay() + 1;
         const available = [];
+        const hour = now.getHours();
+
+        date.setHours(0, 0, 0)
+        now.setHours(0, 0, 0)
 
         const mentor = await User.find(params[Engine.id("mentor")]);
         if (mentor == null) return response.notFound(Engine.title("mentor"));
 
-        const schedule = (await Schedule.query()
+        const schedule = await Schedule.query()
             .where(Engine.id("mentor"), params[Engine.id("mentor")])
             .where('day', day)
-            .fetch()).toJSON();
+            .first()
+
+        if (schedule == null) return response.notFound("Schedule")
 
         const consultations = (await Consultation.query()
             .where(Engine.id("mentor"), params[Engine.id("mentor")])
@@ -97,14 +104,21 @@ class MentorScheduleController {
             .where('approval_status', '<>', 1)
             .fetch()).toJSON();
 
-        const start_time = parseInt(schedule[0].start_time.split(":")[0]);
-        const end_time = parseInt(schedule[0].end_time.split(":")[0]);
+        const start_time = parseInt(schedule.start_time.split(":")[0]);
+        const end_time = parseInt(schedule.end_time.split(":")[0]);
 
-        for (let i = start_time; i <= end_time - 1; i++) {
+        for (let i = 0; i <= end_time - 1; i++) {
             let time = i < 10 ? `0${i}:00:00` : `${i}:00:00`;
+            let is_available
+
+            if (now.toString() == date.toString() && hour >= i - 1) is_available = false
+            else if (i < start_time) is_available = false
+            else if (i > end_time) is_available = false
+            else is_available = !consultations.some(x => x.time == time)
+
             available.push({
                 time: time,
-                is_available: !consultations.some(x => x.time == time)
+                is_available: is_available
             })
         }
 
@@ -136,27 +150,37 @@ class MentorScheduleController {
             let day = now.getDay() + 1;
             now.setDate(now.getDate() + 1);
 
-            let schedule = (await Schedule.query()
+            let schedule = await Schedule.query()
                 .where(Engine.id("mentor"), mentor.id)
                 .where('day', day)
-                .fetch()).toJSON()[0];
+                .first();
 
-            let start_time = parseInt(schedule.start_time.split(":")[0]);
-            let end_time = parseInt(schedule.end_time.split(":")[0]);
-            let total_time = end_time - start_time;
+            if (schedule == null) {
+                available.push({
+                    date: date,
+                    total_schedule: 0,
+                    available: 0,
+                    booked: 0
+                })
+            } else {
 
-            let total_booked = await Consultation.query()
-                .where(Engine.id("mentor"), mentor.id)
-                .where('date', date)
-                .where('approval_status', '<>', 1)
-                .getCount();
+                let start_time = parseInt(schedule.start_time.split(":")[0]);
+                let end_time = parseInt(schedule.end_time.split(":")[0]);
+                let total_time = end_time - start_time;
 
-            available.push({
-                date: date,
-                total_schedule: total_time,
-                available: total_time - total_booked,
-                booked: total_booked
-            })
+                let total_booked = await Consultation.query()
+                    .where(Engine.id("mentor"), mentor.id)
+                    .where('date', date)
+                    .where('approval_status', '<>', 1)
+                    .getCount();
+
+                available.push({
+                    date: date,
+                    total_schedule: total_time,
+                    available: total_time - total_booked,
+                    booked: total_booked
+                })
+            }
         }
 
         return response.success(available)
