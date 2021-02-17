@@ -249,7 +249,10 @@ class MentorScheduleController {
      * @returns {Promise<void|*>}
      */
     async show({response, params}) {
-        const schedule = await Schedule.query().where(Engine.id("mentor"), params.id).fetch();
+        const schedule = await Schedule.query()
+            .where(Engine.id("mentor"), params.id)
+            .orderBy('day', 'asc')
+            .fetch();
         return response.success(schedule)
     }
 
