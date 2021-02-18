@@ -448,7 +448,7 @@ class ConsultationController {
             type: 1,
             parent_id: consultation.id,
             title: "You have been booked",
-            message: user.name + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
+            message: user.username + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
         });
 
         const user_notification = await Notification.create({
@@ -700,7 +700,7 @@ class ConsultationController {
             type: 1,
             parent_id: consultation.id,
             title: "You have been booked",
-            message: user.name + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
+            message: user.username + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
         });
 
         await Fcm.send(mentor, notification, "notification");
