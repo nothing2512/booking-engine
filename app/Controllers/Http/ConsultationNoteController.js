@@ -142,24 +142,25 @@ class ConsultationNoteController {
      */
     async store({auth, request, response}) {
         const params = request.all();
-        const mentor = await auth.getUser();
-        let isMentor = false;
-
-        if (mentor instanceof User && mentor.role_id == 2) isMentor = true;
-
-        if (!isMentor) return response.forbidden();
+        const authUser = await auth.getUser();
 
         const consultation = await Consultation.find(params.consultation_id);
         if (consultation == null) return response.notFound("Consultation");
 
-        let note = await consultation.note().fetch();
-        if (note == null) note = await Note.create(params);
-        else {
-            note.merge(params);
-            await note.save()
-        }
+        const hasAccess = consultation.user_id == authUser.id || consultation[Engine.id("mentor")] == authUser.id
+        if (!hasAccess) return response.forbidden();
 
-        note = await this.detail(note, consultation);
+        let note = await consultation.note().fetch();
+
+        if (params.title != null) {
+            if (note == null) note = await Note.create(params);
+            else {
+                note.merge(params);
+                await note.save()
+            }
+
+            note = await this.detail(note, consultation);
+        }
 
         const user = await User.find(consultation.user_id);
         const notification = await Notification.create({
@@ -170,7 +171,17 @@ class ConsultationNoteController {
             message: "Konsultasi anda telah selesai, periksa notes untuk detailnya..."
         });
 
+        const mentor = await User.find(consultation[Engine.id("mentor")]);
+        const mentor_notification = await Notification.create({
+            user_id: mentor.id,
+            type: 1,
+            parent_id: consultation.id,
+            title: "Your Consultation Has Been Done",
+            message: "Konsultasi anda telah selesai, periksa notes untuk detailnya..."
+        });
+
         await Fcm.send(user, notification, "notification");
+        await Fcm.send(mentor, mentor_notification, "notification");
 
         const aggregator = await AggregatorMentor.findBy(Engine.id("mentor"), consultation[Engine.id("mentor")]);
         const cost = await Cost.findBy(Engine.id("aggregator"), aggregator[Engine.id("aggregator")]);

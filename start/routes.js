@@ -99,6 +99,7 @@ Route.group(() => {
     /**
      * Consultation And Booking Routes
      */
+    Route.post("/consultation/end", "ConsultationNoteController.store").middleware(["user", "mentor", "required"])
     Route.get(`/consultation/next`, `ConsultationController.nextConsultation`).middleware([`user`, `mentor`, `required`]);
     Route.get(`/consultation/sorted`, `ConsultationController.indexByDate`).middleware([`user`, `mentor`, `required`]);
     Route.get(`/consultation`, `ConsultationController.index`).middleware([`user`, `mentor`, `aggregator`, `required`]);
@@ -270,7 +271,7 @@ Route.group(() => {
  * V1 Group Routes
  */
 Route.group(() => {
-	
+
     Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
     Route.get(`/${(Engine.lower("mentor"))}s/date/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
 }).prefix(`v1`).namespace(`V1`);
