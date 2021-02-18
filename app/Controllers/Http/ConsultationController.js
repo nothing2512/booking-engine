@@ -558,14 +558,6 @@ class ConsultationController {
         const user = await User.find(consultation.user_id);
         if (user.fcm != null) await Fcm.send(user, notification, "notification");
 
-        if (zoomResponse !== null) {
-            consultation.toJSON();
-            Object.assign(consultation, {
-                zoom_password: zoomResponse['password'],
-                zoom_passcode: zoomResponse['pstn_password']
-            })
-        }
-
         consultation = await this.detail(consultation);
 
         return response.success(consultation)
