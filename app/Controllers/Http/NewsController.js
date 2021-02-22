@@ -30,6 +30,7 @@ class NewsController {
      */
     async detail(news) {
         news.category = await NewsCategory.find(news.category_id);
+        news.tags = news.tags.split(",")
         return news
     }
 
@@ -78,9 +79,11 @@ class NewsController {
     async store({auth, request, response}) {
         const user = await auth.getUser();
         const payloads = request.only(["title", "content", "category_id"]);
+
         payloads.author_id = user.id;
         payloads.author_type = user instanceof User ? "user" : "admin";
         payloads.header_image = await Uploader.news(request.file("image"));
+        payloads.tags = request.input("tags", []).join(",")
 
         const category = await NewsCategory.find(payloads.category_id);
         if (category == null) return response.notFound("Category");
@@ -133,6 +136,8 @@ class NewsController {
         const payloads = request.only(["title", "content", "category_id"]);
         const header_image = await Uploader.news(request.file("image"));
         if (header_image != null) news.header_image = header_image;
+
+        news.tags = request.input("tags", []).join(",")
 
         const category = await NewsCategory.find(payloads.category_id);
         if (category == null) return response.notFound("Category");

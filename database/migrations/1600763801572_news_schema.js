@@ -15,6 +15,7 @@ class NewsSchema extends Schema {
             table.string('title');
             table.string('slug');
             table.string('header_image');
+            table.text("tags");
 
             table.integer('category_id');
 
