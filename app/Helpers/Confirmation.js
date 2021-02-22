@@ -71,7 +71,10 @@ class Confirmation {
 
         try {
             await Mail.send('email_confirmation', {
-                link: verification_link
+                link: verification_link,
+				bg_color: Engine.get("bg_color"),
+				btn_color: Engine.get("btn_color"),
+				text_color: Engine.get("text_color")
             }, (message) => {
                 message.to(user.email)
                     .from('ezy.bacatarot@gmail.com')
