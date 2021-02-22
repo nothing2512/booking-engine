@@ -29,8 +29,8 @@ ZoomApi.createMeeting = async () => {
         agenda: "This is the meeting description",
         settings: {
             host_video: false,
-            participant_video: false,
-            join_before_host: false,
+            participant_video: true,
+            join_before_host: true,
             mute_upon_entry: true,
             use_pmi: false,
             approval_type: 0
