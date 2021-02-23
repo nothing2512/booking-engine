@@ -30,7 +30,7 @@ class NewsController {
      */
     async detail(news) {
         news.category = await NewsCategory.find(news.category_id);
-        news.tags = news.tags.split(",")
+        if (news.tags != null) news.tags = news.tags.split(",")
         return news
     }
 
