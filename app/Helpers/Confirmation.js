@@ -97,7 +97,7 @@ class Confirmation {
      * @returns {Promise<void>}
      */
     static async verify(request, user) {
-        const originalToken = request.headers().originalAuthorization.split(" ")[1];
+        const originalToken = request.headers().originalAuthorization;
         await LoginToken.query()
             .where("token", originalToken)
             .delete();

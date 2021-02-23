@@ -279,16 +279,18 @@ class AuthController {
         const user = await auth.getUser();
         await Confirmation.verify(request, user);
 
-        let jwt;
+        let authenticator;
         if (user instanceof User) {
-            jwt = auth.authenticator("jwt");
+            authenticator = auth.authenticator("jwt");
             await user.loadMany(['profile', 'role'])
-        } else jwt = auth.authenticator("jwtAdmin");
+        } else authenticator = auth.authenticator("jwtAdmin");
+
+        let jwt = await authenticator.generate(user)
 
         jwt.token = (await Tokenizer.create(user, jwt.token, "jwt")).token;
         jwt.user = user;
 
-        return response.success(user)
+        return response.success(jwt)
     }
 
     /**
