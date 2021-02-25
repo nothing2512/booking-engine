@@ -198,7 +198,7 @@ Route.group(() => {
     /**
      * Users Route
      */
-    resource(`/users`, `UserController`, [`all`], false, false);
+    resource(`/users`, `UserController`, [`all`], false);
 
     /**
      * Voucher Controllers

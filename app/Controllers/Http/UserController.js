@@ -294,12 +294,16 @@ class UserController {
          * get params
          */
         const {type: userType} = request.get();
-        const user = await auth.getUser();
+        let user
         const page = request.input('page', 1);
         const keyword = request.input('searchKeyword', '');
         const status = request.input('status');
         const is_approved = request.input('is_approved', true);
         const category_id = request.input("category_id");
+        const authorization = request.headers().authorization
+
+        if (authorization != null && authorization != "" && authorization != undefined) user = await auth.getUser();
+        else user = null
 
         /**
          * Build query
