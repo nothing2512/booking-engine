@@ -9,19 +9,21 @@ const {google} = require('googleapis');
 class Google {
 
     static async createMeet(date, time, emails) {
+        date = new Date(date)
         const client_id = Engine.get("google.client_id")
         const client_secret = Engine.get("google.client_secret")
         const redirect_uri = Engine.get("redirect_uri")
+        const meetDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`
         const payload = {
             summary: `${Engine.get("app")} meet`,
             location: 'Online',
             description: `${Engine.get("app")} meet`,
             start: {
-                dateTime: `${date}T${time}`,
+                dateTime: `${meetDate}T${time}`,
                 timeZone: 'Asia/Jakarta'
             },
             end: {
-                dateTime: `${date}T${time}`,
+                dateTime: `${meetDate}T${time}`,
                 timeZone: 'Asia/Jakarta'
             },
             attendees: [],
@@ -59,7 +61,7 @@ class Google {
         } catch (e) {
             return {
                 status: false,
-                message: e.message,
+                message: e,
                 url: null
             }
         }
