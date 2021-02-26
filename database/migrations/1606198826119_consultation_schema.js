@@ -18,7 +18,7 @@ class ConsultationSchema extends Schema {
             table.date('date');
             table.time('time');
             table.integer('status');
-            table.text('zoom_join_url');
+            table.text('meet_url');
             table.integer('approval_status').defaultTo(0);
             table.string("voucher_code");
 

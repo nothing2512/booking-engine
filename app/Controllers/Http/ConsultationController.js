@@ -34,8 +34,8 @@ const
     /**@type {typeof import('../../Models/Notification')} */
     Notification = use('App/Models/Notification'),
 
-    /**@type {import('../../Helpers/Zoom')} */
-    ZoomApi = use('App/Helpers/Zoom'),
+    /**@type {import('../../Helpers/Google')} */
+    Google = use('App/Helpers/Google'),
 
     /** @type {import('@adonisjs/lucid/src/Database')} */
     Database = use('Database');
@@ -534,12 +534,17 @@ class ConsultationController {
 
         if (consultation[Engine.id("mentor")] != mentor.id) return response.forbidden();
 
-        let zoomResponse = null;
+        const user = await User.find(consultation.user_id);
 
         const fields = {approval_status: action};
         if (action == 2) {
-            zoomResponse = await ZoomApi.createMeeting();
-            Object.assign(fields, {zoom_join_url: zoomResponse['join_url']})
+            let google = await Google.createMeet(
+                consultation.date,
+                consultation.time,
+                [mentor.email, user.email]
+            )
+            if (!google.status) return response.error(google.message)
+            Object.assign(fields, {meet_url: google.url})
         }
 
         consultation.merge(fields);
@@ -555,7 +560,6 @@ class ConsultationController {
                 `${Engine.title("mentor")} yang anda booking telah menyetujui booking anda.`
         });
 
-        const user = await User.find(consultation.user_id);
         if (user.fcm != null) await Fcm.send(user, notification, "notification");
 
         consultation = await this.detail(consultation);

@@ -26,6 +26,18 @@ module.exports = {
         secret: Env.get("ZOOM_API_SECRET"),
         key: Env.get("ZOOM_API_KEY")
     },
+    google: {
+        client_id: Env.get("GCALENDAR_CLIENT_ID"),
+        client_secret: Env.get("GCALENDAR_CLIENT_SECRET"),
+        redirect_uri: Env.get("GCALENDAR_REDIRECT_URI"),
+        credentials: {
+            access_token: Env.get("GCALENDAR_ACCESS_TOKEN"),
+            refresh_token: Env.get("GCALENDAR_REFRESH_TOKEN"),
+            scope: Env.get("GCALENDAR_SCOPE"),
+            token_type: Env.get("GCALENDAR_TOKEN_TYPE"),
+            expiry_date: Env.get("GCALENDAR_EXPIRY_DATE")
+        }
+    },
     bg_color: "#7D3D60",
     btn_color: "#F4DD8F",
     text_color: "#7D3D60"
