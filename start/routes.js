@@ -271,7 +271,6 @@ Route.group(() => {
  * V1 Group Routes
  */
 Route.group(() => {
-
     Route.get(`/${(Engine.lower("mentor"))}s/schedules/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.timeAvailable`).middleware([`user`, `required`]);
     Route.get(`/${(Engine.lower("mentor"))}s/date/available/:${(Engine.id("mentor"))}`, `MentorScheduleController.dateAvailable`).middleware([`user`, `required`]);
 }).prefix(`v1`).namespace(`V1`);
