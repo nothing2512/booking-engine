@@ -81,6 +81,7 @@ class NotificationController {
             }
 
             notification.consultation = consultation;
+			notification.category = await consultation.category().fetch();
             notification[Engine.lower("mentor")] = mentor
             notification.user = cuser
         }
