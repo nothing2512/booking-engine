@@ -35,7 +35,7 @@ class MentorScheduleController {
      */
     async store({request, response}) {
         const day = request.input("day")
-        const mentor_id = request.get(Engine.id("mentor"));
+        const mentor_id = request.input(Engine.id("mentor"));
 
         const mentor = await User.find(mentor_id);
         if (mentor == null) return response.notFound("Reader");
