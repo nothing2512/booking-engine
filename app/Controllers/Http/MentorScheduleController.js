@@ -107,7 +107,7 @@ class MentorScheduleController {
         const start_time = parseInt(schedule.start_time.split(":")[0]);
         const end_time = parseInt(schedule.end_time.split(":")[0]);
 
-        for (let i = 0; i <= end_time - 1; i++) {
+        for (let i = 0; i <= end_time; i++) {
             let time = i < 10 ? `0${i}:00:00` : `${i}:00:00`;
             let is_available
 

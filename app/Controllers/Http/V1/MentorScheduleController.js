@@ -2,7 +2,7 @@
 
 const
     /**@type {typeof import('../../../Models/MentorSchedule')} */
-    Schedule = use('App/Models/ReaderSchedule'),
+    Schedule = use('App/Models/MentorSchedule'),
 
     /**@type {typeof import('../../../Models/Consultation')} */
     Consultation = use('App/Models/Consultation'),
