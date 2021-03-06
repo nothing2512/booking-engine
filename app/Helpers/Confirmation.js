@@ -77,7 +77,7 @@ class Confirmation {
 				text_color: Engine.get("text_color")
             }, (message) => {
                 message.to(user.email)
-                    .from('ezy.bacatarot@gmail.com')
+                    .from(Engine.lower("email"))
                     .subject(`${Engine.title("app")} Registration Confirmation`)
             })
         } catch (e) {

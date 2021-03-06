@@ -11,6 +11,7 @@ module.exports = {
     book: "Book",
     verification_link: "http://localhost/verification/?token=",
     files_link: "https://files.localhost/attachments/",
+    email: Env.get("MAIL_USER"),
     midtrans: {
         is_production: Env.get("MIDTRANS_IS_PRODUCTION"),
         production_key: Env.get("MIDTRANS_PRODUCTION_KEY"),
