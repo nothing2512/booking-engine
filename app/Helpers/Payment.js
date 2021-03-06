@@ -59,23 +59,28 @@ class Payment {
                 item: [
                     {
                         id: 1,
-                        name: "BCA"
+                        name: "BCA",
+                        image: Engine.get("files_link") + "payment_methods/bca.png"
                     },
                     {
                         id: 2,
-                        name: "BNI"
+                        name: "BNI",
+                        image: Engine.get("files_link") + "payment_methods/bni.png"
                     },
                     {
                         id: 3,
-                        name: "BRI"
+                        name: "BRI",
+                        image: Engine.get("files_link") + "payment_methods/bri.png"
                     },
                     {
                         id: 4,
-                        name: "Mandiri Bill"
+                        name: "Mandiri Bill",
+                        image: Engine.get("files_link") + "payment_methods/mandiri.png"
                     },
                     {
                         id: 5,
-                        name: "Permata"
+                        name: "Permata",
+                        image: Engine.get("files_link") + "payment_methods/permata.png"
                     }
                 ]
             },
@@ -84,7 +89,8 @@ class Payment {
                 item: [
                     {
                         id: 6,
-                        name: "Gopay"
+                        name: "Gopay",
+                        image: Engine.get("files_link") + "payment_methods/gopay.png"
                     }
                 ]
             },
@@ -93,19 +99,23 @@ class Payment {
                 item: [
                     {
                         id: 7,
-                        name: "BCA Klikpay"
+                        name: "BCA Klikpay",
+                        image: Engine.get("files_link") + "payment_methods/bca-clickpay.png"
                     },
                     {
                         id: 8,
-                        name: "CIMB Clicks"
+                        name: "CIMB Clicks",
+                        image: Engine.get("files_link") + "payment_methods/cimb-click.png"
                     },
                     {
                         id: 9,
-                        name: "DANAMON Online Banking"
+                        name: "DANAMON Online Banking",
+                        image: Engine.get("files_link") + "payment_methods/danamon.png"
                     },
                     {
                         id: 10,
-                        name: "E-Pay BRI"
+                        name: "E-Pay BRI",
+                        image: Engine.get("files_link") + "payment_methods/epaybri.png"
                     }
                 ]
             },
@@ -114,11 +124,13 @@ class Payment {
                 item: [
                     {
                         id: 11,
-                        name: "Alfamaret"
+                        name: "Alfamaret",
+                        image: Engine.get("files_link") + "payment_methods/alfamaret.png"
                     },
                     {
                         id: 12,
-                        name: "Alfamaret"
+                        name: "Alfamaret",
+                        image: Engine.get("files_link") + "payment_methods/indomaret.png"
                     }
                 ]
             },
@@ -127,7 +139,8 @@ class Payment {
                 item: [
                     {
                         id: 13,
-                        name: "Akulaku"
+                        name: "Akulaku",
+                        image: Engine.get("files_link") + "payment_methods/akulaku.png"
                     }
                 ]
             }
