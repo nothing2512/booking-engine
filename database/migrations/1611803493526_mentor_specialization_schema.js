@@ -8,7 +8,7 @@ const Engine = use('App/Helpers/Engine');
 
 class MentorSpecializationSchema extends Schema {
     up() {
-        this.create(`${Engine.lower("mentor")}`, (table) => {
+        this.create(`${Engine.lower("mentor")}_specializations`, (table) => {
             table.bigIncrements();
 
             table.integer(Engine.id("mentor"));
@@ -19,7 +19,7 @@ class MentorSpecializationSchema extends Schema {
     }
 
     down() {
-        this.drop(`${Engine.lower("mentor")}`)
+        this.drop(`${Engine.lower("mentor")}_specializations`)
     }
 }
 
