@@ -80,8 +80,9 @@ class Confirmation {
                     .from(Engine.lower("email"))
                     .subject(`${Engine.title("app")} Registration Confirmation`)
             })
+            return token
         } catch (e) {
-
+            return e
         }
     }
 

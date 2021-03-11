@@ -221,7 +221,7 @@ class UserController {
         }
 
         let jwt = await auth.attempt(user.email, params.userPayload.password);
-        await Confirmation.send(jwt, user);
+        user.token = await Confirmation.send(jwt, user);
 
         return {
             status: true,

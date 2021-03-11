@@ -53,6 +53,12 @@ class ConvertAuth {
         headers.super_admin_only = false;
         request.headers(headers);
 
+        // const payloads = request.all()
+        // if (payloads.email != null) {
+        //     payloads.email.toLowerCase()
+        //     request.body = payloads
+        // }
+
         const authorization = headers.authorization;
         if (authorization == null || authorization == "" || authorization == undefined) {
             await Logger.log(null, urlAction, logPayload, data);
