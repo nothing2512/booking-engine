@@ -453,7 +453,7 @@ class ConsultationController {
      */
     async store({auth, request, response}) {
 
-        const params = request.only(["user_id", "date", "time", "price", "voucher_code", "category_id"]);
+        const params = request.only(["user_id", "date", "time", "price", "voucher_code", "category_id", "payment_method"]);
         params[Engine.id("mentor")] = request.input(Engine.id("mentor"));
         const user = await auth.getUser();
         let voucherPayload = {};
