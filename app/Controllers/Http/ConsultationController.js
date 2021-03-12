@@ -298,6 +298,149 @@ class ConsultationController {
     }
 
     /**
+     * create payment
+     *
+     * @param consultation
+     * @param params
+     * @returns {Promise<{data, message: string, status: boolean}|{data: null, message, status: boolean}>}
+     */
+    async createPayment(consultation, params) {
+        let voucherPayload
+        let payment
+        const error = (message) => {
+            return  {
+                status: false,
+                message: message,
+                data: null
+            }
+        }
+        const success = (data) => {
+            return {
+                status: true,
+                message: "",
+                data: data
+            }
+        }
+
+        if (params.voucher_code != null) {
+
+            const now = new Date();
+            const voucher = await UserVoucher.query()
+                .where("voucher_code", params.voucher_code)
+                .where("user_id", consultation.user_id)
+                .first();
+
+            if (voucher == null) return error("Voucher not found")
+            if (voucher.used) return error("Voucher has been used in another consultation");
+            if (voucher.valid_until != null) {
+                if (now > (new Date(voucher.valid_until))) return error("Voucher is expired")
+            }
+
+            if (voucher.payment_method != "" && voucher.payment_method != null && voucher.payment_method != params.payment_method)
+                return error("Payment method not allowed for this voucher");
+
+            voucher.merge({used: true});
+            await voucher.save();
+            let originalPrice = consultation.price;
+            let price = consultation.price;
+            let cashback = 0;
+
+            switch (voucher.type) {
+                case 1:
+                    price = params.price - voucher.discounts;
+                    break;
+                case 2:
+                    price = params.price * voucher.percentage / 100;
+                    break;
+                case 3:
+                    cashback = params.price - voucher.discounts;
+                    break;
+                default:
+                    cashback = params.price * voucher.percentage / 100;
+                    break;
+            }
+
+            if (voucher.max_discount != "" && voucher.max_discount != null) {
+                if (voucher.max_discount < price) price = voucher.max_discount;
+                if (voucher.max_discount < cashback) cashback = voucher.max_discount
+            }
+
+            if (price > originalPrice) {
+                price = 0;
+                consultation.status = 1
+            }
+            consultation.price = price;
+
+            voucherPayload = {
+                payment_method: voucher.payment_method,
+                type: voucher.type,
+                voucher_code: voucher.code,
+                title: voucher.title,
+                description: voucher.description,
+                image: voucher.image,
+                value: voucher.value,
+                max_discount: voucher.max_discount,
+                original_price: originalPrice,
+                price: params.price
+            };
+
+            if (cashback > 0) {
+                const userBalance = await UserBalance.findBy('user_id', consultation.user_id);
+                userBalance.balance += cashback;
+                await userBalance.save()
+            }
+        }
+
+        if (voucherPayload != {} && voucherPayload!= null) {
+            await consultation.voucher().create(voucherPayload);
+            await consultation.save()
+        }
+
+        if (consultation.price == 0) payment = Payment.free();
+        else payment = await Payment.make(
+            params.payment_method,
+            consultation.id,
+            consultation.price,
+            `Booking ${Engine.lower("mentor")}`
+        );
+
+        await consultation.payment().create({
+            midtrans_transaction_id: payment.transaction_id,
+            method: params.payment_method,
+            price: consultation.price,
+            va_number: payment.va_code,
+            qr_link: payment.qr_link,
+            redirect_link: payment.redirect_link,
+            bill_key: payment.bill_key,
+            bill_code: payment.bill_code
+        });
+
+        return success(consultation)
+    }
+
+    /**
+     * Pay Consultation
+     *
+     * @param auth
+     * @param request
+     * @param response
+     * @returns {Promise<*>}
+     */
+    async pay({auth, request, response}) {
+        const user = await auth.getUser()
+        const params = request.only(["consultation_id", "voucher_code", "payment_method", "price"])
+
+        const consultation = await Consultation.find(params.consultation_id)
+        if (consultation == null) return response.notFound("Consultation")
+        if (consultation.user_id != user.id) return response.forbidden()
+
+        const payment = await this.createPayment(consultation, params)
+        if (!payment.status) return response.error(payment.message)
+
+        return response.success(await this.detail(consultation))
+    }
+
+    /**
      * booking mentor / create consultations by user
      *
      * @method store
@@ -340,74 +483,6 @@ class ConsultationController {
         if (profile.isCommunity === false && isNaN(params.price)) response.error("Please input infaq amount first");
         else params.price = profile[`${Engine.lower("mentor")}_price`];
 
-        if (params.voucher_code != null && params.voucher_code != "") {
-            const now = new Date();
-            const voucher = await UserVoucher.query()
-                .where("voucher_code", params.voucher_code)
-                .where("user_id", params.user_id)
-                .first();
-
-            if (voucher == null) return response.notFound("Voucher");
-            if (voucher.used) return response.error("Voucher has been used in another consultation");
-            if (voucher.valid_until != null) {
-                if (now > (new Date(voucher.valid_until))) return response.error("Voucher is expired")
-            }
-
-            if (voucher.payment_method != "" && voucher.payment_method != null && voucher.payment_method != request.input('payment_method'))
-                return response.error("Payment method not allowed for this voucher");
-
-            voucher.merge({used: true});
-            await voucher.save();
-            let originalPrice = params.price;
-            let price = params.price;
-            let cashback = 0;
-
-            switch (voucher.type) {
-                case 1:
-                    price = params.price - voucher.discounts;
-                    break;
-                case 2:
-                    price = params.price * voucher.percentage / 100;
-                    break;
-                case 3:
-                    cashback = params.price - voucher.discounts;
-                    break;
-                default:
-                    cashback = params.price * voucher.percentage / 100;
-                    break;
-            }
-
-            if (voucher.max_discount != "" && voucher.max_discount != null) {
-                if (voucher.max_discount < price) price = voucher.max_discount;
-                if (voucher.max_discount < cashback) cashback = voucher.max_discount
-            }
-
-            if (price > originalPrice) {
-                price = 0;
-                params.status = 1
-            }
-            params.price = price;
-
-            voucherPayload = {
-                payment_method: voucher.payment_method,
-                type: voucher.type,
-                voucher_code: voucher.code,
-                title: voucher.title,
-                description: voucher.description,
-                image: voucher.image,
-                value: voucher.value,
-                max_discount: voucher.max_discount,
-                original_price: originalPrice,
-                price: params.price
-            };
-
-            if (cashback > 0) {
-                const userBalance = await UserBalance.findBy('user_id', params.user_id);
-                userBalance.balance += cashback;
-                await userBalance.save()
-            }
-        }
-
         let consultation_available = await Consultation.query()
             .where(Engine.id("mentor"), mentor.id)
             .where('date', params.date)
@@ -418,30 +493,11 @@ class ConsultationController {
         if (consultation_available > 0) return response.error(`${Engine.title("mentor")} has been booked by another user in that time`);
 
         let consultation = await Consultation.create(params);
-        let payment;
-
-        if (voucherPayload != {}) await consultation.voucher().create(voucherPayload);
-
-        if (params.price == 0) payment = Payment.free();
-        else payment = await Payment.make(
-            request.input('payment_method'),
-            consultation.id,
-            consultation.price,
-            `Booking ${Engine.lower("mentor")}`
-        );
-
-        await consultation.payment().create({
-            midtrans_transaction_id: payment.transaction_id,
-            method: request.input('payment_method'),
-            price: consultation.price,
-            va_number: payment.va_code,
-            qr_link: payment.qr_link,
-            redirect_link: payment.redirect_link,
-            bill_key: payment.bill_key,
-            bill_code: payment.bill_code
-        });
 
         consultation = await this.detail(consultation);
+
+        const payment = await this.createPayment(consultation, params)
+        if (!payment.status) return response.error(payment.message)
 
         const mentor_notification = await Notification.create({
             user_id: consultation[Engine.id("mentor")],

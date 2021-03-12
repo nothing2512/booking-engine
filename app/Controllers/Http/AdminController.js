@@ -109,14 +109,18 @@ class AdminController {
         const {id} = params;
         const authenticatedUser = await auth.getUser();
 
-        if (!(id == authenticatedUser.id && authenticatedUser instanceof Admin)) return response.forbidden();
-
         const admin = await Admin.find(id);
         admin.merge(request.all());
 
         await admin.save();
 
         admin.role = await RoleAdmin.find(admin.role_id);
+
+        if (id == authenticatedUser.id) {
+            const jwt = await auth.authenticator("jwtAdmin").generate(admin)
+            await Tokenizer.remove(request.headers().originalAuthorization.split(" ")[1]);
+            admin.token = (await Tokenizer.create(admin, jwt.token, "jwtAdmin")).token
+        }
 
         return response.success(admin)
     }

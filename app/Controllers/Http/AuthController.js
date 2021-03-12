@@ -294,6 +294,35 @@ class AuthController {
     }
 
     /**
+     * forgot password
+     *
+     * @param auth
+     * @param request
+     * @param response
+     * @returns {Promise<*>}
+     */
+    async forgot({auth, request, response}) {
+        let authenticator
+        let user
+
+        if (request.input("type") == "user") {
+            user = await User.findBy("email", request.input("email"))
+            authenticator = auth.authenticator("jwt")
+        } else {
+            user = await Admin.findBy("email", request.input("email"))
+            authenticator = auth.authenticator("jwtAdmin")
+        }
+
+        if (user == null) return response.notFound("User")
+
+        const jwt = await authenticator.generate(user)
+        const forgot = await Confirmation.forgot(jwt, user)
+
+        if (!forgot.status) return response.error(forgot.message)
+        return response.success()
+    }
+
+    /**
      * logout
      *
      * @method logout

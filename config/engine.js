@@ -9,8 +9,9 @@ module.exports = {
     mentor: "Mentor",
     aggregator: "Aggregator",
     book: "Book",
-    verification_link: "http://localhost/verification/?token=",
-    files_link: "https://files.localhost/attachments/",
+    verification_link: Env.get("VERIFICATION_LINK"),
+    forgot_link: Env.get("FORGOT_LINK"),
+    files_link: Env.get("FILES_LINK"),
     email: Env.get("MAIL_USER"),
     midtrans: {
         is_production: Env.get("MIDTRANS_IS_PRODUCTION"),

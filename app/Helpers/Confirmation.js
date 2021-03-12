@@ -47,6 +47,46 @@ class Confirmation {
     }
 
     /**
+     * Forgot Password Send Email
+     *
+     * @param jwt
+     * @param user
+     * @returns {Promise<{message: string, status: boolean}|{message, status: boolean}>}
+     */
+    static async forgot(jwt, user) {
+        let authenticator;
+
+        if (user instanceof User) authenticator = "jwt";
+        else authenticator = "jwtAdmin";
+
+        const loginToken = await Tokenizer.create(user, jwt.token, authenticator);
+        const token = encodeURI(loginToken.token);
+
+        const forgot_link = `${Engine.lower("forgot_link")}${token}`;
+        try {
+            await Mail.send('email_forgot', {
+                link: forgot_link,
+                bg_color: Engine.get("bg_color"),
+                btn_color: Engine.get("btn_color"),
+                text_color: Engine.get("text_color")
+            }, (message) => {
+                message.to(user.email)
+                    .from(Engine.lower("email"))
+                    .subject(`${Engine.title("app")} Forgot Password`)
+            })
+            return {
+                status: true,
+                message: ""
+            }
+        } catch (e) {
+            return {
+                status: false,
+                message: e
+            }
+        }
+    }
+
+    /**
      * Send Confirmation Email
      *
      * @static

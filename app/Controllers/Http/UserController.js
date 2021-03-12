@@ -9,6 +9,9 @@ const Admin = use('App/Models/Admin');
 /** @type {typeof import('../../Models/User')} */
 const User = use('App/Models/User');
 
+/** @type {typeof import('../../Models/Role')} */
+const Role = use('App/Models/Role');
+
 /** @type {typeof import('../../Models/UserProfile')} */
 const UserProfile = use('App/Models/UserProfile');
 
@@ -568,6 +571,20 @@ class UserController {
         if (authUser.id == params.id) {
             const balance = await Balance.findBy("user_id", params.id);
             result.balance = balance.balance
+
+            const subReferral = Database.from("user_referral_inviteds")
+                .where("user_id", params.id)
+                .select("referral_id")
+
+            const userReferral = await UserReferral.findBy("user_id", params.id)
+            const claimReferral = await UserReferral.query()
+                .where("id", subReferral)
+                .first()
+
+            result.referral = {
+                self: userReferral,
+                claimed: claimReferral
+            }
         }
 
         return response.success(result)
@@ -619,6 +636,10 @@ class UserController {
         if (authenticatedUser.id == params.id) {
             const balance = await Balance.findBy("user_id", params.id);
             user.balance = balance.balance
+
+            const jwt = await auth.authenticator("jwt").generate(user)
+            await Tokenizer.remove(request.headers().originalAuthorization.split(" ")[1]);
+            user.token = (await Tokenizer.create(user, jwt.token, "jwt")).token
         }
 
         return response.success(user)

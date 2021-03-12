@@ -73,6 +73,7 @@ Route.group(() => {
     Route.post(`/signin/social`, `AuthController.loginSocial`);
     Route.post(`/register`, `UserController.store`);
     Route.post(`/register/social`, `UserController.registerWithSocial`);
+    Route.post("/forgot", "AuthController.forgot");
     Route.get(`/verify`, `AuthController.verify`).middleware([`all`, `required`]);
     Route.post(`/signout`, `AuthController.logout`).middleware([`all`, `required`]);
     Route.post(`/registration`, `UserController.save`).middleware([`aggregator`, `required`]);
@@ -104,6 +105,7 @@ Route.group(() => {
     Route.get(`/consultation/sorted`, `ConsultationController.indexByDate`).middleware([`user`, `mentor`, `required`]);
     Route.get(`/consultation`, `ConsultationController.index`).middleware([`user`, `mentor`, `aggregator`, `required`]);
     Route.get(`/consultation/:id`, `ConsultationController.show`).middleware([`user`, `mentor`, `aggregator`, `required`]);
+    Route.post("/consultation/pay", "ConsultationController.pay").middleware(["user", "required"])
     Route.post(`/consultation`, `ConsultationController.store`).middleware([`user`, `required`]);
     resource(`/consultations/note`, `ConsultationNoteController`, [`user`, `mentor`, `aggregator`], false, false);
     Route.get(`/payment/methods`, `ConsultationController.paymentMethods`);
