@@ -97,8 +97,8 @@ class UserVoucherController {
         const voucher = await Voucher.findBy("code", params.code);
         if (voucher == null) return response.notFound("Voucher");
 
-        voucher.expired = (new Date(voucher.valid_until)) < now;
-        if (voucher.expired) return response.error("Voucher is expired");
+        const isExpired = (new Date(voucher.valid_until)) < now;
+        if (isExpired) return response.error("Voucher is expired");
 
         if (voucher.max_redeem != "" && voucher.max_redeem != null) {
             if (voucher.max_redeem == 0) return response.error("Voucher has run out");

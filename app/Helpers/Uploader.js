@@ -29,7 +29,7 @@ class Uploader {
                 name: filename,
                 overwrite: true
             });
-            return `https://files.bacatarot.xyz/${folderName}/${filename}`
+            return `${folderName}/${filename}`
         } catch (e) {
             return null
         }

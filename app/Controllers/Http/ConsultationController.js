@@ -396,24 +396,26 @@ class ConsultationController {
             await consultation.save()
         }
 
-        if (consultation.price == 0) payment = Payment.free();
-        else payment = await Payment.make(
-            params.payment_method,
-            consultation.id,
-            consultation.price,
-            `Booking ${Engine.lower("mentor")}`
-        );
+        if (params.payment_method != null) {
+            if (consultation.price == 0) payment = Payment.free();
+            else payment = await Payment.make(
+                params.payment_method,
+                consultation.id,
+                consultation.price,
+                `Booking ${Engine.lower("mentor")}`
+            );
 
-        await consultation.payment().create({
-            midtrans_transaction_id: payment.transaction_id,
-            method: params.payment_method,
-            price: consultation.price,
-            va_number: payment.va_code,
-            qr_link: payment.qr_link,
-            redirect_link: payment.redirect_link,
-            bill_key: payment.bill_key,
-            bill_code: payment.bill_code
-        });
+            await consultation.payment().create({
+                midtrans_transaction_id: payment.transaction_id,
+                method: params.payment_method,
+                price: consultation.price,
+                va_number: payment.va_code,
+                qr_link: payment.qr_link,
+                redirect_link: payment.redirect_link,
+                bill_key: payment.bill_key,
+                bill_code: payment.bill_code
+            });
+        }
 
         return success(consultation)
     }
@@ -453,10 +455,9 @@ class ConsultationController {
      */
     async store({auth, request, response}) {
 
-        const params = request.only(["user_id", "date", "time", "price", "voucher_code", "category_id", "payment_method"]);
+        const params = request.only(["user_id", "date", "time", "price", "voucher_code", "category_id"]);
         params[Engine.id("mentor")] = request.input(Engine.id("mentor"));
         const user = await auth.getUser();
-        let voucherPayload = {};
 
         if (user.status == 'inactive') return response.error("Confirm your email first");
 
@@ -495,6 +496,7 @@ class ConsultationController {
         let consultation = await Consultation.create(params);
 
         consultation = await this.detail(consultation);
+        params.payment_method = request.input("payment_method")
 
         const payment = await this.createPayment(consultation, params)
         if (!payment.status) return response.error(payment.message)
