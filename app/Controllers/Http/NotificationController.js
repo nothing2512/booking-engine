@@ -49,7 +49,7 @@ class NotificationController {
                 if (midtrans.transaction_status == "settlement") {
                     consultation.merge({status: 1});
                     await consultation.save();
-                    notification.title = "Consultation has been paid";
+                    notification.title = "Konsultasi telah dibayar";
                     notification.message = `Anda telah membayar ${Engine.lower("mentor")}, periksa jadwal konsultasi sekarang juga`;
                     await Notification.query()
                         .where('user_id', consultation.user_id)
@@ -65,8 +65,8 @@ class NotificationController {
                     consultation.merge({status: 3});
                     await consultation.save();
 
-                    notification.title = "Consultation has been expired";
-                    notification.message = "Jadwal Konsultasi anda telah kadaluarsa";
+                    notification.title = "Konsultasi telah kadaluarsa";
+                    notification.message = "Maaf, jadwal Konsultasi anda telah kadaluarsa";
                     await Notification.query()
                         .where('user_id', consultation.user_id)
                         .where('parent_id', consultation.id)
@@ -140,7 +140,7 @@ class NotificationController {
         const user = await auth.getUser();
         const notification = await Notification.find(params.id);
 
-        if (notification == null) return response.notFound("Notification");
+        if (notification == null) return response.notFound("Notifikasi");
 
         if (user instanceof User && user.id != notification.user_id) return response.forbidden();
 

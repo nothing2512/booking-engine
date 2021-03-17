@@ -95,7 +95,7 @@ class UserAttachmentController {
     async update({auth, params, request, response}) {
         const authUser = await auth.getUser();
         const attachment = await UserAttachment.find(params.id);
-        if (attachment == null) return response.notFound("Attachment");
+        if (attachment == null) return response.notFound("Berkas");
 
         if (!(await this.hasAccess(authUser, attachment))) return response.forbidden();
 
@@ -123,7 +123,7 @@ class UserAttachmentController {
     async destroy({auth, params, response}) {
         const authUser = await auth.getUser();
         const attachment = await UserAttachment.find(params.id);
-        if (attachment == null) return response.notFound("Attachment");
+        if (attachment == null) return response.notFound("berkas");
 
         if (!(await this.hasAccess(authUser, attachment))) return response.forbidden();
 

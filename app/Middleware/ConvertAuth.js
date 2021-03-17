@@ -36,12 +36,12 @@ class ConvertAuth {
             })
         };
 
-        response.underDevelopment = () => result(false, "Under Development");
+        response.underDevelopment = () => result(false, "Sedang dalam pengembangan");
         response.error = (message) => result(false, message);
         response.success = (data) => result(true, "", data);
-        response.forbidden = () => result(false, "Forbidden Access !");
-        response.missmatch = () => result(false, "Token Missmatch !");
-        response.notFound = (name) => result(false, `${name} not found`);
+        response.forbidden = () => result(false, "Akses ditolak !");
+        response.missmatch = () => result(false, "Token salah !");
+        response.notFound = (name) => result(false, `${name} tidak ditemukan`);
 
         const logPayload = request.only(["device", "device_id", 'user_agent', 'latitude', 'longitude']);
         const headers = request.headers();

@@ -96,7 +96,7 @@ class MentorScheduleController {
             .where('day', day)
             .first()
 
-        if (schedule == null) return response.notFound("Schedule")
+        if (schedule == null) return response.notFound("Jadwal")
 
         const consultations = (await Consultation.query()
             .where(Engine.id("mentor"), params[Engine.id("mentor")])
@@ -269,7 +269,7 @@ class MentorScheduleController {
      */
     async update({params, request, response}) {
         const schedule = await Schedule.find(params.id);
-        if (schedule == null) return response.notFound("Schedule");
+        if (schedule == null) return response.notFound("Jadwal");
         schedule.merge(request.all());
         await schedule.save();
         return response.success(schedule)

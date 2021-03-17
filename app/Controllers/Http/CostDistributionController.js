@@ -61,7 +61,7 @@ class CostDistributionController {
         const user = await auth.getUser();
         let cost = await CostDistribution.find(params.id);
 
-        if (cost == null) return response.notFound("Cost Distribution");
+        if (cost == null) return response.notFound("Pembagian upah");
         if (user instanceof User && cost[Engine.id("aggregator")] != user.id) return response.forbidden();
 
         return response.success(await this.detail(cost))
@@ -84,9 +84,10 @@ class CostDistributionController {
         let cost = await CostDistribution.find(params.id);
         const payloads = request.all();
 
-        if (cost == null) return response.notFound("Cost Distribution");
+        if (cost == null) return response.notFound("Pembagian upah");
 
-        if (payloads[Engine.lower("aggregator")] + payloads[Engine.lower("mentor")] != 100) return response.error("Total cost aggregator and reader must be 100%");
+        if (payloads[Engine.lower("aggregator")] + payloads[Engine.lower("mentor")] != 100)
+            return response.error(`Total pembagian upah ${Engine.lower("aggregator")} dan ${Engine.lower("mentor")} harus 100%`);
 
         if (user instanceof User) {
             if (cost[Engine.id("aggregator")] != user.id) return response.forbidden();

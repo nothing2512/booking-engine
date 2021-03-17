@@ -145,7 +145,7 @@ class ConsultationNoteController {
         const authUser = await auth.getUser();
 
         const consultation = await Consultation.find(params.consultation_id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
         const hasAccess = consultation.user_id == authUser.id || consultation[Engine.id("mentor")] == authUser.id
         if (!hasAccess) return response.forbidden();
@@ -167,8 +167,8 @@ class ConsultationNoteController {
             user_id: user.id,
             type: 1,
             parent_id: consultation.id,
-            title: "Your Consultation Has Been Done",
-            message: "Konsultasi anda telah selesai, periksa notes untuk detailnya..."
+            title: "Konsultasi telah selesai",
+            message: "Konsultasi anda telah selesai, periksa catatan untuk detailnya..."
         });
 
         const mentor = await User.find(consultation[Engine.id("mentor")]);
@@ -176,8 +176,8 @@ class ConsultationNoteController {
             user_id: mentor.id,
             type: 1,
             parent_id: consultation.id,
-            title: "Your Consultation Has Been Done",
-            message: "Konsultasi anda telah selesai, periksa notes untuk detailnya..."
+            title: "Konsultasi telah selesai",
+            message: "Konsultasi anda telah selesai, periksa catatan untuk detailnya..."
         });
 
         await Fcm.send(user, notification, "notification");
@@ -248,7 +248,7 @@ class ConsultationNoteController {
     async show({auth, response, params}) {
         const user = await auth.getUser();
         let note = await Note.find(params.id);
-        if (note == null) return response.notFound("Consultation Note");
+        if (note == null) return response.notFound("Catatan");
 
         const consultation = await Consultation.find(note.consultation_id);
         if (!this.is_accessible(note, user, consultation)) return response.forbidden();
@@ -274,7 +274,7 @@ class ConsultationNoteController {
         let note = await Note.find(params.id);
         const obj = request.all();
 
-        if (note == null) return response.notFound("Consultation Note");
+        if (note == null) return response.notFound("Catatan");
 
         const consultation = await Consultation.find(note.consultation_id);
         if (!this.is_accessible(note, user, consultation)) return response.forbidden();
@@ -302,7 +302,7 @@ class ConsultationNoteController {
         const user = await auth.getUser();
         const note = await Note.find(params.id);
 
-        if (note == null) return response.notFound("Consultation Note");
+        if (note == null) return response.notFound("Catatan");
 
         const consultation = await Consultation.find(note.consultation_id);
         if (!this.is_accessible(note, user, consultation)) return response.forbidden();

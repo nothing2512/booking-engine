@@ -63,7 +63,7 @@ class BookCategoryController {
      */
     async show({params, response}) {
         let category = await Category.find(params.id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
         return response.success(category)
     }
 
@@ -80,7 +80,7 @@ class BookCategoryController {
      */
     async update({params, request, response}) {
         const category = await Category.find(params.id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         category.merge(request.all());
         const image = Uploader.category(request.file("image"));

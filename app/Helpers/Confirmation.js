@@ -42,7 +42,7 @@ class Confirmation {
         }, (message) => {
             message.to("blank345red@gmail.com")
                 .from('ezy.bacatarot@gmail.com')
-                .subject(`${Engine.title("app")} Registration Confirmation`)
+                .subject(`Konfirmasi Pendaftaran ${Engine.title("app")}`)
         })
     }
 
@@ -72,7 +72,7 @@ class Confirmation {
             }, (message) => {
                 message.to(user.email)
                     .from(Engine.lower("email"))
-                    .subject(`${Engine.title("app")} Forgot Password`)
+                    .subject(`Lupa Password ${Engine.title("app")}`)
             })
             return {
                 status: true,
@@ -118,7 +118,7 @@ class Confirmation {
             }, (message) => {
                 message.to(user.email)
                     .from(Engine.lower("email"))
-                    .subject(`${Engine.title("app")} Registration Confirmation`)
+                    .subject(`Konfirmasi Pendaftaran ${Engine.title("app")}`)
             })
             return token
         } catch (e) {

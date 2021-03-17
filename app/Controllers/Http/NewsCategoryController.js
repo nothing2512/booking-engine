@@ -4,7 +4,7 @@
 const NewsCategory = use('App/Models/NewsCategory');
 
 /**
- * News Category Controller
+ * Kategori Controller
  *
  * @class NewsCategory
  *
@@ -51,7 +51,7 @@ class NewsCategoryController {
      */
     async show({params, response}) {
         const category = await NewsCategory.find(params.id);
-        if (category == null) return response.notFound("News Category");
+        if (category == null) return response.notFound("Kategori");
         return response.success(category)
     }
 
@@ -68,7 +68,7 @@ class NewsCategoryController {
      */
     async update({params, request, response}) {
         const category = await NewsCategory.find(params.id);
-        if (category == null) return response.notFound("News Category");
+        if (category == null) return response.notFound("Kategori");
 
         category.merge(request.all());
         await category.save();

@@ -21,7 +21,7 @@ class ReferralController {
 
     async show({params, auth, response}) {
         const referral = await Referral.findBy("referral_code", params.code);
-        if (referral == null) return response.notFound("Referral");
+        if (referral == null) return response.notFound("Kode referral");
 
         try {
             const user = await auth.getUser();

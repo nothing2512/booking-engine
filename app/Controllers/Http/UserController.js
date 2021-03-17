@@ -91,7 +91,7 @@ class UserController {
 
         if (totalAccount > 0) return {
             status: false,
-            message: "Username or Email has been registered in another account",
+            message: "Username / Email telah terdaftar di akun lain",
             data: null
         };
 
@@ -100,13 +100,13 @@ class UserController {
 
             if (params.aggregator == null || params.aggregator.role_id != 3) return {
                 status: false,
-                message: `${Engine.title("aggregator")} Not Found`,
+                message: `${Engine.title("aggregator")} tidak ditemukan`,
                 data: null
             };
 
             if (!params.aggregator.is_approved) return {
                 status: false,
-                message: `${Engine.title("aggregator")} has been not verified by admin`,
+                message: `${Engine.title("aggregator")} belum terverifikasi`,
                 data: null
             }
         }
@@ -130,8 +130,8 @@ class UserController {
                     user_id: user.id,
                     voucher_code: params.referral,
                     type: 2,
-                    title: "Referral Voucher",
-                    description: `Referral Voucher From ${refUser.name}`,
+                    title: "Voucher Referral",
+                    description: `Voucher Referral dari ${refUser.name}`,
                     value: 50,
                     used: false
                 })
@@ -165,7 +165,7 @@ class UserController {
             for (let id of params.categoryIds) {
                 if (await Category.find(id) == null) return {
                     status: false,
-                    message: "Category not found",
+                    message: "Kategori tidak ditemukan",
                     data: null
                 };
                 specializationPayloads.push({category_id: id})
@@ -191,7 +191,7 @@ class UserController {
                     user_id: user.id,
                     type: 3,
                     parent_id: mentorRequest.id,
-                    title: "Submission was send",
+                    title: "Permintaan bergabung telah dikirim",
                     message: "Data anda sedang di review oleh tim"
                 });
 
@@ -199,8 +199,8 @@ class UserController {
                     user_id: params[Engine.id("aggregator")],
                     type: 3,
                     parent_id: mentorRequest.id,
-                    title: "Someone has been submit request",
-                    message: "Seseorang telah request untuk menjadi bergabung dengan anda"
+                    title: "Permintaan bergabung",
+                    message: `${user.username} telah meminta untuk bergabung dengan anda`
                 });
 
                 await Fcm.send(user, mentor_notification, "notification");
@@ -681,7 +681,8 @@ class UserController {
                 ["notifications", "user_id"],
                 ["user_profiles", "user_id"],
                 ["user_tokens", "user_id"],
-                ["user_referrals", "user_id"]
+                ["user_referrals", "user_id"],
+                ["user_referral_inviteds", "user_id"]
             ];
             consultation = Database.from('consultations').where('user_id', user.id)
         } else if (user.role_id === 2) {
@@ -691,7 +692,8 @@ class UserController {
                 ["notifications", "user_id"],
                 ["user_tokens", "user_id"],
                 [`${Engine.lower("mentor")}_schedules`, Engine.id("mentor")],
-                ["user_referrals", "user_id"]
+                ["user_referrals", "user_id"],
+                ["user_referral_inviteds", "user_id"]
             ];
             consultation = Database.from('consultations').where(Engine.id("mentor"), user.id)
         } else {

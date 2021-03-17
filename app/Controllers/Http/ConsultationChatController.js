@@ -110,7 +110,7 @@ class ConsultationChatController {
     async show({auth, params, request, response}) {
         const authUser = await auth.getUser();
         const consultation = await Consultation.find(params.id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
         if (authUser.role_id == 1 && authUser.id != consultation.user_id) return response.forbidden();
         if (authUser.role_id == 2 && authUser.id != consultation[Engine.id("mentor")]) return response.forbidden();
@@ -141,10 +141,10 @@ class ConsultationChatController {
     async store({auth, request, params, response}) {
         const authUser = await auth.getUser();
         const consultation = await Consultation.find(params.id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
-        if (consultation.status == 3) return response.error("Consultation has been expired");
-        if (consultation.status == 2) return response.error("Consultation has been ended");
+        if (consultation.status == 3) return response.error("Konsultasi telah kadaluarsa");
+        if (consultation.status == 2) return response.error("Konsultasi telah berakhir");
 
         if (authUser.role_id == 1 && authUser.id != consultation.user_id) return response.forbidden();
         if (authUser.role_id == 2 && authUser.id != consultation[Engine.id("mentor")]) return response.forbidden();
@@ -179,16 +179,16 @@ class ConsultationChatController {
     async update({auth, params, request, response}) {
         const authUser = await auth.getUser();
         const chat = await ConsultationChat.find(params.id);
-        if (chat == null) return response.notFound("Chat");
+        if (chat == null) return response.notFound("Pesan");
 
         const consultation = await Consultation.find(chat.consultation_id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
         if (authUser.role_id == 1 && authUser.id != consultation.user_id) return response.forbidden();
         if (authUser.role_id == 2 && authUser.id != consultation[Engine.id("mentor")]) return response.forbidden();
 
-        if (consultation.status == 3) return response.error("Consultation has been expired");
-        if (consultation.status == 2) return response.error("Consultation has been ended");
+        if (consultation.status == 3) return response.error("Konsultasi telah kadaluarsa");
+        if (consultation.status == 2) return response.error("Konsultasi telah berakhir");
 
         const attachment = await Uploader.chat(request.file("attachment"));
         chat.text = request.input("text");
@@ -213,10 +213,10 @@ class ConsultationChatController {
     async destroy({auth, params, response}) {
         const authUser = await auth.getUser();
         const chat = await ConsultationChat.find(params.id);
-        if (chat == null) return response.notFound("Chat");
+        if (chat == null) return response.notFound("Pesan");
 
         const consultation = await Consultation.find(chat.consultation_id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
         if (authUser.role_id == 1 && authUser.id != consultation.user_id) return response.forbidden();
         if (authUser.role_id == 2 && authUser.id != consultation[Engine.id("mentor")]) return response.forbidden();

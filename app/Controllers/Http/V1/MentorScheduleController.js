@@ -37,7 +37,7 @@ class MentorScheduleController {
         const mentor = await User.find(params[Engine.id("mentor")]);
         if (mentor == null) return response.notFound(Engine.title("mentor"));
 
-        if (parseInt(mentor.role_id) !== 2) return response.notFound(`User is not ${Engine.lower("mentor")}`);
+        if (parseInt(mentor.role_id) !== 2) return response.notFound(`User bukan ${Engine.lower("mentor")}`);
 
         const now = new Date();
         let month = now.getMonth() + 1;
@@ -118,7 +118,7 @@ class MentorScheduleController {
             .where('day', day)
             .first();
 
-        if (schedule == null) return response.notFound("Schedule");
+        if (schedule == null) return response.notFound("Jadwal");
 
         const consultations = (await Consultation.query()
             .where(Engine.id("mentor"), mentor.id)

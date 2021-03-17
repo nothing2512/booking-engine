@@ -6,6 +6,9 @@ const Axios = require('axios');
 /** @type {import('./Engine')} */
 const Engine = use('App/Helpers/Engine');
 
+/** @type {import('uuid')} */
+const uuid = use('uuid');
+
 /**
  * Payment Helper
  * using for midtrans payment helper
@@ -60,27 +63,27 @@ class Payment {
                     {
                         id: 1,
                         name: "BCA",
-                        image: Engine.get("files_link") + "payment_methods/bca.png"
+                        image: "attachments/payment_methods/bca.png"
                     },
                     {
                         id: 2,
                         name: "BNI",
-                        image: Engine.get("files_link") + "payment_methods/bni.png"
+                        image: "attachments/payment_methods/bni.png"
                     },
                     {
                         id: 3,
                         name: "BRI",
-                        image: Engine.get("files_link") + "payment_methods/bri.png"
+                        image: "attachments/payment_methods/bri.png"
                     },
                     {
                         id: 4,
                         name: "Mandiri Bill",
-                        image: Engine.get("files_link") + "payment_methods/mandiri.png"
+                        image: "attachments/payment_methods/mandiri.png"
                     },
                     {
                         id: 5,
                         name: "Permata",
-                        image: Engine.get("files_link") + "payment_methods/permata.png"
+                        image: "attachments/payment_methods/permata.png"
                     }
                 ]
             },
@@ -90,7 +93,7 @@ class Payment {
                     {
                         id: 6,
                         name: "Gopay",
-                        image: Engine.get("files_link") + "payment_methods/gopay.png"
+                        image: "attachments/payment_methods/gopay.png"
                     }
                 ]
             },
@@ -100,22 +103,22 @@ class Payment {
                     {
                         id: 7,
                         name: "BCA Klikpay",
-                        image: Engine.get("files_link") + "payment_methods/bca-clickpay.png"
+                        image: "attachments/payment_methods/bca-clickpay.png"
                     },
                     {
                         id: 8,
                         name: "CIMB Clicks",
-                        image: Engine.get("files_link") + "payment_methods/cimb-click.png"
+                        image: "attachments/payment_methods/cimb-click.png"
                     },
                     {
                         id: 9,
                         name: "DANAMON Online Banking",
-                        image: Engine.get("files_link") + "payment_methods/danamon.png"
+                        image: "attachments/payment_methods/danamon.png"
                     },
                     {
                         id: 10,
                         name: "E-Pay BRI",
-                        image: Engine.get("files_link") + "payment_methods/epaybri.png"
+                        image: "attachments/payment_methods/epaybri.png"
                     }
                 ]
             },
@@ -125,12 +128,12 @@ class Payment {
                     {
                         id: 11,
                         name: "Alfamaret",
-                        image: Engine.get("files_link") + "payment_methods/alfamaret.png"
+                        image: "attachments/payment_methods/alfamaret.png"
                     },
                     {
                         id: 12,
                         name: "Alfamaret",
-                        image: Engine.get("files_link") + "payment_methods/indomaret.png"
+                        image: "attachments/payment_methods/indomaret.png"
                     }
                 ]
             },
@@ -140,7 +143,7 @@ class Payment {
                     {
                         id: 13,
                         name: "Akulaku",
-                        image: Engine.get("files_link") + "payment_methods/akulaku.png"
+                        image: "attachments/payment_methods/akulaku.png"
                     }
                 ]
             }
@@ -169,13 +172,12 @@ class Payment {
      * @method make
      *
      * @param method
-     * @param consultation_id
      * @param price
      * @param product
      * @returns {Promise<{transaction_id: any, redirect_link: string, transaction_status: any, price: any, bill_code: string, bill_key: string, order_id: any, qr_link: string, va_code: string}|{transaction_id: any, redirect_link: string, transaction_status: any, price: any, bill_code: string, transaction_time: any, bill_key: string, order_id: any, qr_link: string, va_code: any}|{transaction_id: any, redirect_link: string, transaction_status: any, price: any, bill_code: any, transaction_time: any, bill_key: any, order_id: any, qr_link: string, va_code: string}|{transaction_id: any, redirect_link: string, transaction_status: any, price: any, bill_code: string, transaction_time: any, bill_key: string, order_id: any, qr_link: string, va_code: any}|{transaction_id: any, redirect_link: string, transaction_status: any, price: any, bill_code: string, transaction_time: any, bill_key: string, order_id: any, qr_link: string, va_code: string}|{transaction_id: any, redirect_link: any, transaction_status: any, price: any, bill_code: string, transaction_time: any, bill_key: string, order_id: any, qr_link: string, va_code: any}|*|boolean|undefined>}
      */
-    static async make(method, consultation_id, price, product = "") {
-        return (new Payment()).make(method, consultation_id, price, product)
+    static async make(method, price, product = "") {
+        return (new Payment()).make(method, price, product)
     }
 
     /**
@@ -348,12 +350,11 @@ class Payment {
      * @method make
      *
      * @param method
-     * @param consultation_id
      * @param price
      * @param product
      * @returns {Promise<{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: string, redirect_link: string, transaction_status: string, price: string, bill_code: string, transaction_time: string, bill_key: string, order_id: string, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: *, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: *, transaction_time: *, bill_key: *, order_id: *, qr_link: string, va_code: string}|{transaction_id: *, redirect_link: string, transaction_status: *, price: *, bill_code: string, transaction_time: *, bill_key: string, order_id: *, qr_link: string, va_code: *}|boolean>}
      */
-    async make(method, consultation_id, price, product = "") {
+    async make(method, price, product = "") {
         this.method = parseInt(method);
         method = this.method;
 
@@ -395,7 +396,7 @@ class Payment {
         let data = {
             payment_type: payment_type,
             transaction_details: {
-                order_id: `${Engine.title("app")}-${consultation_id}`,
+                order_id: uuid.v4(),
                 gross_amount: price
             }
         };

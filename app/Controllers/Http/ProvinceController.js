@@ -38,7 +38,7 @@ class ProvinceController {
      */
     async show({params, response}) {
         const province = await Province.find(params.id);
-        if (province == null) return response.notFound("Province");
+        if (province == null) return response.notFound("Provinsi");
         province.cities = await province.cities().fetch();
         return response.success(province)
     }
@@ -66,7 +66,7 @@ class ProvinceController {
      */
     async update({params, request, response}) {
         const province = await Province.find(params.id);
-        if (province == null) return response.notFound("Province");
+        if (province == null) return response.notFound("Provinsi");
 
         province.merge(request.all());
         await province.save();

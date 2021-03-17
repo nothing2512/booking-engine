@@ -109,7 +109,7 @@ class BookController {
     async store({request, response}) {
         const payloads = request.all();
         const category = await Category.find(payloads.category_id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         payloads.image = await Uploader.book(request.file("image"));
 
@@ -138,7 +138,7 @@ class BookController {
 
         const payloads = request.all();
         const category = await Category.find(payloads.category_id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         if (!isNaN(index)) {
             if (index > book.index) {

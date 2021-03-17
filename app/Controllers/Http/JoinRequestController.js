@@ -63,11 +63,7 @@ class JoinRequestController {
         const payloads = [];
 
         if (user instanceof User) {
-            if (user.role_id != 3) return response.json({
-                status: false,
-                message: "Forbidden Access",
-                data: null
-            });
+            if (user.role_id != 3) return response.forbidden()
 
             const requests = await MentorJoinRequest.query()
                 .where(Engine.id("aggregator"), user.id)
@@ -105,14 +101,14 @@ class JoinRequestController {
         if (user instanceof User) {
             if (user.role_id != 3) return {
                 status: false,
-                message: "Forbidden Access",
+                message: "Akses ditolak !",
                 data: null
             };
 
             const joinRequest = await MentorJoinRequest.find(request_id);
             if (joinRequest == null) return {
                 status: false,
-                message: "Request not found",
+                message: "Permintaan tidak ditemukan",
                 data: null
             };
 
@@ -141,7 +137,7 @@ class JoinRequestController {
             const aggregator = await User.find(request_id);
             if (aggregator == null) return {
                 status: false,
-                message: `${Engine.title("aggregator")} not found`,
+                message: `${Engine.title("aggregator")} tidak ditemukan`,
                 data: null
             };
 
@@ -176,8 +172,8 @@ class JoinRequestController {
         return response.json(await this.mainApprovalAction(
             user,
             params.id,
-            "Your submission has been approved",
-            `Request anda untuk bergabung dengan ${Engine.lower("aggregator")} telah disetujui`,
+            "Permintaan bergabung anda telah disetujui",
+            `Permintaan anda untuk bergabung dengan ${Engine.lower("aggregator")} telah disetujui`,
             true
         ))
     }
@@ -199,8 +195,8 @@ class JoinRequestController {
         return response.json(await this.mainApprovalAction(
             user,
             params.id,
-            "Your submission has been rejected",
-            `Request anda untuk bergabung dengan ${Engine.lower("aggregator")} telah ditolak`
+            "Permintaan bergabung anda telah ditolak",
+            `Permintaan anda untuk bergabung dengan ${Engine.lower("aggregator")} telah ditolak`
         ))
     }
 }

@@ -25,7 +25,7 @@ class DistrictController {
      */
     async show({params, response}) {
         const district = await District.find(params.id);
-        if (district == null) return response.notFound("District");
+        if (district == null) return response.notFound("Kecamatan / Kabupaten");
 
         const city = await district.city().fetch();
         district.city = city;
@@ -43,7 +43,7 @@ class DistrictController {
      */
     async store({request, response}) {
         const city = await City.find(request.input('city_id'));
-        if (city == null) return response.notFound("City");
+        if (city == null) return response.notFound("Kota");
 
         const district = await District.create(request.all());
 
@@ -63,7 +63,7 @@ class DistrictController {
      */
     async update({params, request, response}) {
         const district = await District.find(params.id);
-        if (district == null) return response.notFound("District");
+        if (district == null) return response.notFound("Kecamatan / Kabupaten");
 
         district.merge(request.all());
         await district.save();

@@ -92,16 +92,16 @@ class UserVoucherController {
             .where("voucher_code", params.code)
             .getCount();
 
-        if (total > 0) return response.error("You already have that voucher");
+        if (total > 0) return response.error("Anda telah memiliki voucher tersebut");
 
         const voucher = await Voucher.findBy("code", params.code);
         if (voucher == null) return response.notFound("Voucher");
 
         const isExpired = (new Date(voucher.valid_until)) < now;
-        if (isExpired) return response.error("Voucher is expired");
+        if (isExpired) return response.error("Maaf, Voucher telah kadaluarsa");
 
         if (voucher.max_redeem != "" && voucher.max_redeem != null) {
-            if (voucher.max_redeem == 0) return response.error("Voucher has run out");
+            if (voucher.max_redeem == 0) return response.error("Maaf, voucher telah habis");
             else {
                 voucher.max_redeem -= 1;
                 await voucher.save()

@@ -147,7 +147,7 @@ class MentorController {
 
         const payloads = [];
         for (let categoryId of categoryIds) {
-            if (await Category.find(id) == null) return response.notFound("Category");
+            if (await Category.find(id) == null) return response.notFound("Kategori");
             let payload = {};
             payloads[Engine.id("mentor")] = params.id;
             payloads.category_id = categoryId;

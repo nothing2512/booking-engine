@@ -95,18 +95,18 @@ class VoucherController {
 
         if (is_create) {
             const storedVoucher = await Voucher.findBy("code", code);
-            if (storedVoucher != null) return "Voucher with this has been stored"
+            if (storedVoucher != null) return "Voucher telah terdaftar"
         }
 
-        if (value == "" || value == null) return "Value cannot be null";
+        if (value == "" || value == null) return "Potongan harga tidak boleh kosong";
 
-        if ((type == 2 || type == 4) && value > 100) return "Max value is 100";
-        if (value < 1) return "Min Value is 1";
+        if ((type == 2 || type == 4) && value > 100) return "Maksimal potongan harga adalah 100";
+        if (value < 1) return "Minimal potongan harga adalah 1";
 
         if (maxRedeem == null || maxRedeem == "" || maxRedeem < 1)
-            return "Max redeem minimal is 1";
+            return "Maksimal pengambilan voucher adalah 1";
 
-        if (now > valid_until) return "Valid until date can't be less than now";
+        if (now > valid_until) return "Waktu berlaku tidak sah";
 
         return ""
     }

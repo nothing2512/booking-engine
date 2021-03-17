@@ -86,7 +86,7 @@ class NewsController {
         payloads.tags = request.input("tags", []).join(",")
 
         const category = await NewsCategory.find(payloads.category_id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         const news = await News.create(payloads);
 
@@ -105,7 +105,7 @@ class NewsController {
      */
     async show({params, response}) {
         const news = await News.find(params.id);
-        if (news == null) return response.notFound("News");
+        if (news == null) return response.notFound("Berita");
         return response.success(await this.detail(news))
     }
 
@@ -124,11 +124,7 @@ class NewsController {
     async update({auth, params, request, response}) {
         const user = await auth.getUser();
         const news = await News.find(params.id);
-        if (news == null) return response.json({
-            status: false,
-            message: "News not found",
-            data: null
-        });
+        if (news == null) return response.notFound("Berita")
 
         if (user instanceof User && (user.id != news.author_id || news.author_type != "user")) return response.forbidden();
         else if (!(user instanceof User) && (user.id != news.author_id || news.author_type != "admin")) return response.forbidden();
@@ -140,7 +136,7 @@ class NewsController {
         news.tags = request.input("tags", []).join(",")
 
         const category = await NewsCategory.find(payloads.category_id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         news.merge(payloads);
         await news.save();

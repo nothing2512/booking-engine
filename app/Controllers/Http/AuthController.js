@@ -54,15 +54,10 @@ class AuthController {
 
         if (email != undefined && email != "") user = await User.findBy('email', email);
         else if (username != undefined && username != "") user = await User.findBy('username', username);
-        else return {
-                status: false,
-                message: "Username / Email not found",
-                data: null
-            };
 
         if (user == null) return {
             status: false,
-            message: "User With Provided Username / Email Not Found",
+            message: "Username / Email tidak ditemukan",
             data: null
         };
 
@@ -74,7 +69,7 @@ class AuthController {
             } catch (e) {
                 return {
                     status: false,
-                    message: "Wrong Password !",
+                    message: "Password salah !",
                     data: null
                 }
             }
@@ -103,8 +98,8 @@ class AuthController {
                     user_id: user.id,
                     type: 1,
                     parent_id: consultation.id,
-                    title: "Consultation Expired",
-                    message: "Jadwal konsultasi anda telah kadaluarsa"
+                    title: "Konsultasi telah kadaluarsa",
+                    message: "Maaf, jadwal konsultasi anda telah kadaluarsa"
                 });
                 await Fcm.send(user, notification, "notification")
             }
@@ -137,7 +132,7 @@ class AuthController {
 
         if (admin == null) return {
             status: false,
-            message: "Admin With Provided Username / Email Not Found",
+            message: "Username / Email tidak ditemukan",
             data: null
         };
 
@@ -152,7 +147,7 @@ class AuthController {
             } catch (e) {
                 return {
                     status: false,
-                    message: "Wrong Password !",
+                    message: "Password salah !",
                     data: null
                 }
             }

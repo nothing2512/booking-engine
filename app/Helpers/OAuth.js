@@ -24,7 +24,7 @@ class OAuth {
     static async detail(accessToken, type) {
         if (accessToken == "") return {
             status: false,
-            message: "Access Token Required",
+            message: "Akses token diperlukan",
             data: null
         };
 
@@ -38,7 +38,7 @@ class OAuth {
         } catch (e) {
             return {
                 status: false,
-                message: "Access Token is invalid or expired",
+                message: "Akses token salah / sudah tidak berlaku",
                 data: null
             }
         }

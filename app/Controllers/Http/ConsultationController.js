@@ -72,7 +72,7 @@ class ConsultationController {
                     user_id: consultation.user_id,
                     type: 1,
                     parent_id: consultation.id,
-                    title: "Consultation has been paid",
+                    title: "Konsultasi telah dibayar",
                     message: `Anda telah membayar ${Engine.lower("mentor")}, periksa jadwal konsultasi sekarang juga`
                 });
                 const user = await User.find(consultation.user_id);
@@ -89,8 +89,8 @@ class ConsultationController {
                     user_id: consultation.user_id,
                     type: 1,
                     parent_id: consultation.id,
-                    title: "Consultation has been expired",
-                    message: "Jadwal Konsultasi anda telah kadaluarsa"
+                    title: "Konsultasi telah kadaluarsa",
+                    message: "Maaf, jadwal Konsultasi anda telah kadaluarsa"
                 });
                 const user = await User.find(consultation.user_id);
                 await Fcm.send(user, user_notification, "notification")
@@ -184,8 +184,8 @@ class ConsultationController {
                     user_id: user.id,
                     type: 1,
                     parent_id: consultation.id,
-                    title: "Consultation Expired",
-                    message: "Jadwal konsultasi anda telah kadaluarsa"
+                    title: "Konsultasi telah kadaluarsa",
+                    message: "Maaf, jadwal konsultasi anda telah kadaluarsa"
                 });
                 await Fcm.send(user, notification, "notification")
             }
@@ -308,7 +308,7 @@ class ConsultationController {
         let voucherPayload
         let payment
         const error = (message) => {
-            return  {
+            return {
                 status: false,
                 message: message,
                 data: null
@@ -330,14 +330,14 @@ class ConsultationController {
                 .where("user_id", consultation.user_id)
                 .first();
 
-            if (voucher == null) return error("Voucher not found")
-            if (voucher.used) return error("Voucher has been used in another consultation");
+            if (voucher == null) return error("Voucher tidak ditemukan")
+            if (voucher.used) return error("Voucher telah digunakan");
             if (voucher.valid_until != null) {
-                if (now > (new Date(voucher.valid_until))) return error("Voucher is expired")
+                if (now > (new Date(voucher.valid_until))) return error("Voucher telah kadaluarsa")
             }
 
             if (voucher.payment_method != "" && voucher.payment_method != null && voucher.payment_method != params.payment_method)
-                return error("Payment method not allowed for this voucher");
+                return error("Metode pembayaran tidak di ijinkan");
 
             voucher.merge({used: true});
             await voucher.save();
@@ -347,16 +347,16 @@ class ConsultationController {
 
             switch (voucher.type) {
                 case 1:
-                    price = params.price - voucher.discounts;
+                    price = consultation.price - voucher.value;
                     break;
                 case 2:
-                    price = params.price * voucher.percentage / 100;
+                    price = consultation.price * voucher.value / 100;
                     break;
                 case 3:
-                    cashback = params.price - voucher.discounts;
+                    cashback = consultation.price - voucher.value;
                     break;
                 default:
-                    cashback = params.price * voucher.percentage / 100;
+                    cashback = consultation.price * voucher.value / 100;
                     break;
             }
 
@@ -391,16 +391,16 @@ class ConsultationController {
             }
         }
 
-        if (voucherPayload != {} && voucherPayload!= null) {
+        if (voucherPayload != {} && voucherPayload != null) {
             await consultation.voucher().create(voucherPayload);
             await consultation.save()
         }
 
         if (params.payment_method != null) {
+
             if (consultation.price == 0) payment = Payment.free();
             else payment = await Payment.make(
                 params.payment_method,
-                consultation.id,
                 consultation.price,
                 `Booking ${Engine.lower("mentor")}`
             );
@@ -433,7 +433,7 @@ class ConsultationController {
         const params = request.only(["consultation_id", "voucher_code", "payment_method", "price"])
 
         const consultation = await Consultation.find(params.consultation_id)
-        if (consultation == null) return response.notFound("Consultation")
+        if (consultation == null) return response.notFound("Konsultasi")
         if (consultation.user_id != user.id) return response.forbidden()
 
         const payment = await this.createPayment(consultation, params)
@@ -459,12 +459,12 @@ class ConsultationController {
         params[Engine.id("mentor")] = request.input(Engine.id("mentor"));
         const user = await auth.getUser();
 
-        if (user.status == 'inactive') return response.error("Confirm your email first");
+        if (user.status == 'inactive') return response.error("Konfirmasi email anda terlebih dahulu");
 
         let userAccess = false;
 
         if (user instanceof User && user.role_id === 1) userAccess = true;
-        if (!userAccess) return response.success(`Just ${Engine.lower("user")} can booking ${Engine.lower("mentor")}`);
+        if (!userAccess) return response.forbidden()
 
         params.user_id = user.id;
 
@@ -472,16 +472,16 @@ class ConsultationController {
         if (mentor == null) return response.notFound(Engine.title("mentor"));
 
         const aggregatorMentor = await AggregatorMentor.findBy(Engine.id("mentor"), params[Engine.id("mentor")]);
-        if (aggregatorMentor == null) return response.error(`${Engine.id("mentor")} has been not joined with aggregator`);
+        if (aggregatorMentor == null) return response.error(`${Engine.id("mentor")} belum bergabung dengan aggregator`);
 
         const profile = await AggregatorProfile.findBy("user_id", aggregatorMentor[Engine.id("aggregator")]);
         if (profile == null) return response.notFound(Engine.title("aggregator"));
 
         const category = await Category.find(params.category_id);
-        if (category == null) return response.notFound("Category");
+        if (category == null) return response.notFound("Kategori");
 
         params.status = 0;
-        if (profile.isCommunity === false && isNaN(params.price)) response.error("Please input infaq amount first");
+        if (profile.isCommunity === false && isNaN(params.price)) response.error("Mohon masukkan nominal sumbangan");
         else params.price = profile[`${Engine.lower("mentor")}_price`];
 
         let consultation_available = await Consultation.query()
@@ -491,7 +491,7 @@ class ConsultationController {
             .where('approval_status', '<>', 1)
             .getCount();
 
-        if (consultation_available > 0) return response.error(`${Engine.title("mentor")} has been booked by another user in that time`);
+        if (consultation_available > 0) return response.error(`Maaf, jadwal tersebut tidak tersedia`);
 
         let consultation = await Consultation.create(params);
 
@@ -505,7 +505,7 @@ class ConsultationController {
             user_id: consultation[Engine.id("mentor")],
             type: 1,
             parent_id: consultation.id,
-            title: "You have been booked",
+            title: "Anda mendapatkan pelanggan",
             message: user.username + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
         });
 
@@ -513,7 +513,7 @@ class ConsultationController {
             user_id: user.id,
             type: 2,
             parent_id: consultation.id,
-            title: `Pay your ${Engine.lower("mentor")} now!`,
+            title: `Bayar konsultasi anda sekarang !`,
             message: `Anda telah memesan ${Engine.lower("mentor")}, segera bayar sebelum jatuh tempo`
         });
 
@@ -551,7 +551,7 @@ class ConsultationController {
         const consultation = await Consultation.find(params.id);
         const user = await auth.getUser();
 
-        if (consultation == null) return response.error("Consultation not found");
+        if (consultation == null) return response.notFound("Konsultasi")
 
         if (user instanceof User) {
             let isAccessible = user.id == consultation.user_id || user.id == consultation[Engine.id("mentor")];
@@ -585,10 +585,10 @@ class ConsultationController {
         const mentor = await auth.getUser();
         if (mentor == null) return response.forbidden();
 
-        if (mentor.role_id !== 2) return response.success(`Just ${Engine.lower("mentor")} can perform this action`);
+        if (mentor.role_id !== 2) return response.forbidden()
 
         let consultation = await Consultation.find(params.id);
-        if (consultation == null) return response.notFound("Consultation");
+        if (consultation == null) return response.notFound("Konsultasi");
 
         if (consultation[Engine.id("mentor")] != mentor.id) return response.forbidden();
 
@@ -612,7 +612,7 @@ class ConsultationController {
             user_id: consultation.user_id,
             type: 1,
             parent_id: consultation.id,
-            title: action === 1 ? "Consultation has been rejected" : "Consultation has been approved",
+            title: action === 1 ? "Konsultasi telah ditolak" : "Konsultasi telah disetujui",
             message: action === 1 ?
                 `${Engine.title("mentor")} yang anda booking tidak menyetujui booking anda, mohon cari ${Engine.lower("mentor")} lain` :
                 `${Engine.title("mentor")} yang anda booking telah menyetujui booking anda.`
@@ -662,10 +662,10 @@ class ConsultationController {
      */
     isReplacementValid(user, consultation) {
         let message = "";
-        if (consultation == null) message = "Consultation not found";
-        if (consultation.status == 0) message = "You has been not pay for this consultation";
-        if (consultation.approval_status == 2) message = `Your consultation has been approved by ${Engine.lower("mentor")}`;
-        if (consultation.user_id != user.id) message = "Forbidden access";
+        if (consultation == null) message = "Konsultasi tidak ditemukan";
+        if (consultation.status == 0) message = "Maaf, anda belum membayar konsultasi";
+        if (consultation.approval_status == 2) message = `Maaf, konsultasi anda telah disetujui oleh ${Engine.lower("mentor")}`;
+        if (consultation.user_id != user.id) message = "Akses ditolak !";
         if (message !== "") return {
             status: false,
             message: message,
@@ -761,7 +761,7 @@ class ConsultationController {
             user_id: consultation[Engine.id("mentor")],
             type: 1,
             parent_id: consultation.id,
-            title: "You have been booked",
+            title: "Anda mendapatkan pelanggan",
             message: user.username + " telah memesan anda, cek jadwal konsultasi untuk selengkapnya"
         });
 

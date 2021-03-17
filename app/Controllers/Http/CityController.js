@@ -25,7 +25,7 @@ class CityController {
      */
     async show({params, response}) {
         const city = await City.find(params.id);
-        if (city == null) return response.notFound("City");
+        if (city == null) return response.notFound("Kota");
 
         city.districts = await city.districts().fetch();
         city.province = await city.province().fetch();
@@ -42,7 +42,7 @@ class CityController {
      */
     async store({request, response}) {
         const province = await Province.find(request.input('province_id'));
-        if (province == null) return response.notFound("Province");
+        if (province == null) return response.notFound("Provinsi");
 
         const city = await City.create(request.all());
 
@@ -62,7 +62,7 @@ class CityController {
      */
     async update({params, request, response}) {
         const city = await City.find(params.id);
-        if (city == null) return response.notFound("City");
+        if (city == null) return response.notFound("Kota");
 
         city.merge(request.all());
         await city.save();
